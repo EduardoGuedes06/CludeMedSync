@@ -10,3 +10,8 @@
 /API/src/CludeMedSync.Service/obj
 /API/src/CludeMedSync.Tests/obj/Debug/net8.0
 /API/src/CludeMedSync.Tests/obj
+/API/src/CludeMedSync.Api/bin/Debug/net8.0
+/API/src/CludeMedSync.Data/bin/Debug/net8.0
+/API/src/CludeMedSync.Domain/bin/Debug/net8.0
+/API/src/CludeMedSync.Service/bin/Debug/net8.0
+/API/src/CludeMedSync.Tests/bin/Debug/net8.0
