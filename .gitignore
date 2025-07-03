@@ -4,3 +4,7 @@
 
 /.vs
 /API/.vs
+/API/src/CludeMedSync.Api/obj
+/API/src/CludeMedSync.Data/obj
+/API/src/CludeMedSync.Domain/obj
+/API/src/CludeMedSync.Service/obj
