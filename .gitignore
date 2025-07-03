@@ -8,3 +8,5 @@
 /API/src/CludeMedSync.Data/obj
 /API/src/CludeMedSync.Domain/obj
 /API/src/CludeMedSync.Service/obj
+/API/src/CludeMedSync.Tests/obj/Debug/net8.0
+/API/src/CludeMedSync.Tests/obj

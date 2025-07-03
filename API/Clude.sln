@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CludeMedSync.Domain", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CludeMedSync.Api", "src\CludeMedSync.Api\CludeMedSync.Api.csproj", "{B119D7D0-D16F-44E9-8BC7-280876709E7D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Tests", "5 - Tests", "{77F8D68C-7076-4DB4-8772-0D0C8954B407}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CludeMedSync.Tests", "src\CludeMedSync.Tests\CludeMedSync.Tests.csproj", "{6DB29F45-28A2-93F7-7142-A3CD2AC0608C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +47,10 @@ Global
 		{B119D7D0-D16F-44E9-8BC7-280876709E7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B119D7D0-D16F-44E9-8BC7-280876709E7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B119D7D0-D16F-44E9-8BC7-280876709E7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DB29F45-28A2-93F7-7142-A3CD2AC0608C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DB29F45-28A2-93F7-7142-A3CD2AC0608C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DB29F45-28A2-93F7-7142-A3CD2AC0608C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DB29F45-28A2-93F7-7142-A3CD2AC0608C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +61,7 @@ Global
 		{E3C2BFDC-023D-B329-352B-7CDD68DDD7D9} = {0D228FD0-75B4-4E8D-B691-2360A0E72B2F}
 		{D5379B6C-8ACC-D625-BA81-6A368FF2D807} = {AF6554A0-8A74-4339-82FF-2F642D46C541}
 		{B119D7D0-D16F-44E9-8BC7-280876709E7D} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{6DB29F45-28A2-93F7-7142-A3CD2AC0608C} = {77F8D68C-7076-4DB4-8772-0D0C8954B407}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F4C51317-2C4F-4E48-9A95-A1C4A907A1D1}
