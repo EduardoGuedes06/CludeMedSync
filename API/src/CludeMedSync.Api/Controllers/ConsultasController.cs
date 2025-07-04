@@ -44,7 +44,6 @@ namespace CludeMedSync.Api.Controllers
 		/// <response code="500">Erro interno</response>
 		[HttpGet("{id}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public async Task<IActionResult> GetById(int id)
 		{
 			var consulta = await _consultaService.GetByIdAsync(id);
@@ -62,8 +61,6 @@ namespace CludeMedSync.Api.Controllers
 		/// <response code="500">Erro interno</response>
 		[HttpPost("agendar")]
 		[ProducesResponseType(StatusCodes.Status201Created)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public async Task<IActionResult> Agendar([FromBody] AgendarConsultaDto consultaDto)
 		{
 			try
@@ -96,7 +93,6 @@ namespace CludeMedSync.Api.Controllers
 		/// <response code="500">Erro interno</response>
 		[HttpPatch("{id}/cancelar")]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public async Task<IActionResult> Cancelar(int id)
 		{
 			var sucesso = await _consultaService.CancelarAsync(id);

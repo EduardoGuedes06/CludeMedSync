@@ -1,4 +1,4 @@
-﻿using CludeMedSync.Services.DTOs;
+﻿using CludeMedSync.Service.DTOs;
 using FluentValidation;
 
 namespace CludeMedSync.Service.Validators

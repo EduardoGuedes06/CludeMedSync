@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CludeMedSync.Service.DTOs
+﻿namespace CludeMedSync.Service.DTOs
 {
 	public record CreateProfissionalDto(
 		string NomeCompleto,

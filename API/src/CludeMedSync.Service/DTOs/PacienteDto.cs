@@ -1,4 +1,4 @@
-﻿namespace CludeMedSync.Services.DTOs
+﻿namespace CludeMedSync.Service.DTOs
 {
 	public record CreatePacienteDto(
 		string NomeCompleto,

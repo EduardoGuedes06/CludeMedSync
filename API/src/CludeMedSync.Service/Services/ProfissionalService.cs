@@ -1,25 +1,24 @@
 ﻿using CludeMedSync.Domain.Interfaces;
 using CludeMedSync.Domain.Models;
+using CludeMedSync.Domain.Models.Utils.Enums;
+using CludeMedSync.Service.Common;
 using CludeMedSync.Service.DTOs;
 using CludeMedSync.Service.Interfaces;
+using System.Threading.Tasks;
 
 namespace CludeMedSync.Service.Services
 {
 	public class ProfissionalService : IProfissionalService
 	{
 		private readonly IProfissionalRepository _profissionalRepository;
+		private readonly IConsultaRepository _consultaRepository;
 
-		public ProfissionalService(IProfissionalRepository profissionalRepository)
+		public ProfissionalService(
+			IProfissionalRepository profissionalRepository, 
+			IConsultaRepository consultaRepository)
 		{
 			_profissionalRepository = profissionalRepository;
-		}
-
-		public async Task<bool> DeleteAsync(int id)
-		{
-			var profissional = await _profissionalRepository.GetByIdAsync(id);
-			if (profissional == null) return false;
-
-			return await _profissionalRepository.DeleteAsync(id);
+			_consultaRepository = consultaRepository;
 		}
 
 		public async Task<ProfissionalDto?> GetByIdAsync(int id)
@@ -50,13 +49,16 @@ namespace CludeMedSync.Service.Services
 			));
 		}
 
-		public async Task<ProfissionalDto> CreateAsync(CreateProfissionalDto profissionalDto)
+		public async Task<ResultadoOperacao<ProfissionalDto>> CreateAsync(CreateProfissionalDto profissionalDto)
 		{
-			var profissionalExistente = await _profissionalRepository.GetByCrmAsync(profissionalDto.CRM);
-			if (profissionalExistente != null)
-			{
-				throw new InvalidOperationException("Já existe um profissional cadastrado com este CRM.");
-			}
+			var (existe, mensagem) = await _profissionalRepository.VerificarDuplicidadeProfissionalAsync(
+				profissionalDto.CRM,
+				profissionalDto.Email,
+				profissionalDto.Telefone
+			);
+
+			if (existe)
+				return ResultadoOperacao<ProfissionalDto>.Falha(mensagem);
 
 			var profissional = new Profissional
 			{
@@ -70,8 +72,18 @@ namespace CludeMedSync.Service.Services
 			var novoId = await _profissionalRepository.AddAsync(profissional);
 			profissional.Id = novoId;
 
-			return new ProfissionalDto(profissional.Id, profissional.NomeCompleto, profissional.Especialidade, profissional.CRM, profissional.Email, profissional.Telefone);
+			var dto = new ProfissionalDto(
+				profissional.Id,
+				profissional.NomeCompleto,
+				profissional.Especialidade,
+				profissional.CRM,
+				profissional.Email,
+				profissional.Telefone
+			);
+
+			return ResultadoOperacao<ProfissionalDto>.Ok("Profissional cadastrado com sucesso.", dto);
 		}
+
 
 		public async Task<bool> UpdateAsync(int id, CreateProfissionalDto profissionalDto)
 		{
@@ -85,6 +97,26 @@ namespace CludeMedSync.Service.Services
 			profissional.Telefone = profissionalDto.Telefone;
 
 			return await _profissionalRepository.UpdateAsync(profissional);
+		}
+		public async Task<ResultadoOperacao<object>> DeleteAsync(int id)
+		{
+			var profissional = await _profissionalRepository.GetByIdAsync(id);
+			if (profissional == null)
+				return ResultadoOperacao<object>.Falha("profissional não encontrado.");
+
+			var consulta = await _consultaRepository.GetByRelationShip(
+				nameof(Consulta.ProfissionalId),
+				id.ToString(),
+				EnumTipoAtributo.Inteiro
+			);
+
+			if (consulta != null)
+				return ResultadoOperacao<object>.Falha("Não é possível excluir o Profissional. Consulta vinculada encontrada.", consulta);
+
+			var sucesso = await _profissionalRepository.DeleteAsync(id);
+			return sucesso
+				? ResultadoOperacao<object>.Ok("Profissional excluído com sucesso.")
+				: ResultadoOperacao<object>.Falha("Erro ao excluir paciente.");
 		}
 	}
 }

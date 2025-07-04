@@ -16,11 +16,41 @@ namespace CludeMedSync.Data.Repositories
 		{
 		}
 
-		public async Task<Paciente?> GetByCpfAsync(string cpf)
+		public async Task<(bool existeConflito, string mensagem)> VerificarDuplicidadePacienteAsync(string cpf, string email, string? telefone)
 		{
 			using var connection = CreateConnection();
-			var query = $"SELECT * FROM {nameof(Paciente)} WHERE CPF = @Cpf AND Ativo = 1";
-			return await connection.QuerySingleOrDefaultAsync<Paciente>(query, new { Cpf = cpf });
+
+			var mensagens = new List<string>();
+			var existeConflito = false;
+
+			var cpfQuery = $"SELECT 1 FROM {nameof(Paciente)} WHERE {nameof(Paciente.CPF)} = '{cpf}' AND Ativo = 1 LIMIT 1";
+			if (await connection.ExecuteScalarAsync<int?>(cpfQuery) != null)
+			{
+				mensagens.Add($"Já existe um {nameof(Paciente)} cadastrado com este {nameof(Paciente.CPF)}.");
+				existeConflito = true;
+			}
+
+			var emailQuery = $"SELECT 1 FROM {nameof(Paciente)} WHERE {nameof(Paciente.Email)} = '{email}' AND Ativo = 1 LIMIT 1";
+			if (await connection.ExecuteScalarAsync<int?>(emailQuery) != null)
+			{
+				mensagens.Add($"Já existe um {nameof(Paciente)} cadastrado com este {nameof(Paciente.Email)}.");
+				existeConflito = true;
+			}
+
+			if (!string.IsNullOrWhiteSpace(telefone))
+			{
+				var telQuery = $"SELECT 1 FROM {nameof(Paciente)} WHERE {nameof(Paciente.Telefone)} = '{telefone}' AND Ativo = 1 LIMIT 1";
+				if (await connection.ExecuteScalarAsync<int?>(telQuery) != null)
+				{
+					mensagens.Add($"Já existe um {nameof(Paciente)} cadastrado com este {nameof(Paciente.Telefone)}.");
+					existeConflito = true;
+				}
+			}
+
+			return (existeConflito, string.Join("  \n", mensagens));
 		}
+
+
+
 	}
 }

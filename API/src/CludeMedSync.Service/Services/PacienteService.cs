@@ -1,21 +1,23 @@
 ﻿using CludeMedSync.Domain.Interfaces;
 using CludeMedSync.Domain.Models;
-using CludeMedSync.Services.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CludeMedSync.Domain.Models.Utils.Enums;
+using CludeMedSync.Service.Common;
+using CludeMedSync.Service.DTOs;
+using CludeMedSync.Service.Interfaces;
 
 namespace CludeMedSync.Service.Services
 {
 	public class PacienteService : IPacienteService
 	{
 		private readonly IPacienteRepository _pacienteRepository;
+		private readonly IConsultaRepository _consultaRepository;
 
-		public PacienteService(IPacienteRepository pacienteRepository)
+		public PacienteService(
+			IPacienteRepository pacienteRepository, 
+			IConsultaRepository consultaRepository)
 		{
 			_pacienteRepository = pacienteRepository;
+			_consultaRepository = consultaRepository;
 		}
 
 		public async Task<PacienteDto?> GetByIdAsync(int id)
@@ -31,13 +33,16 @@ namespace CludeMedSync.Service.Services
 			return pacientes.Select(p => new PacienteDto(p.Id, p.NomeCompleto, p.DataNascimento, p.CPF, p.Email, p.Telefone));
 		}
 
-		public async Task<PacienteDto> CreateAsync(CreatePacienteDto pacienteDto)
+		public async Task<ResultadoOperacao<PacienteDto>> CreateAsync(CreatePacienteDto pacienteDto)
 		{
-			var pacienteExistente = await _pacienteRepository.GetByCpfAsync(pacienteDto.CPF);
-			if (pacienteExistente != null)
-			{
-				throw new InvalidOperationException("Já existe um paciente cadastrado com este CPF.");
-			}
+			var (existe, mensagem) = await _pacienteRepository.VerificarDuplicidadePacienteAsync(
+				pacienteDto.CPF,
+				pacienteDto.Email,
+				pacienteDto.Telefone
+			);
+
+			if (existe)
+				return ResultadoOperacao<PacienteDto>.Falha(mensagem);
 
 			var paciente = new Paciente
 			{
@@ -52,8 +57,18 @@ namespace CludeMedSync.Service.Services
 			var novoId = await _pacienteRepository.AddAsync(paciente);
 			paciente.Id = novoId;
 
-			return new PacienteDto(paciente.Id, paciente.NomeCompleto, paciente.DataNascimento, paciente.CPF, paciente.Email, paciente.Telefone);
+			var dto = new PacienteDto(
+				paciente.Id,
+				paciente.NomeCompleto,
+				paciente.DataNascimento,
+				paciente.CPF,
+				paciente.Email,
+				paciente.Telefone
+			);
+
+			return ResultadoOperacao<PacienteDto>.Ok("Paciente cadastrado com sucesso.", dto);
 		}
+
 
 		public async Task<bool> UpdateAsync(int id, CreatePacienteDto pacienteDto)
 		{
@@ -69,12 +84,25 @@ namespace CludeMedSync.Service.Services
 			return await _pacienteRepository.UpdateAsync(paciente);
 		}
 
-		public async Task<bool> DeleteAsync(int id)
+		public async Task<ResultadoOperacao<object>> DeleteAsync(int id)
 		{
 			var paciente = await _pacienteRepository.GetByIdAsync(id);
-			if (paciente == null) return false;
+			if (paciente == null)
+				return ResultadoOperacao<object>.Falha("Paciente não encontrado.");
 
-			return await _pacienteRepository.DeleteAsync(id);
+			var consulta = await _consultaRepository.GetByRelationShip(
+				nameof(Consulta.PacienteId),
+				id.ToString(),
+				EnumTipoAtributo.Inteiro
+			);
+
+			if (consulta != null)
+				return ResultadoOperacao<object>.Falha("Não é possível excluir o paciente. Consulta vinculada encontrada.", consulta);
+
+			var sucesso = await _pacienteRepository.DeleteAsync(id);
+			return sucesso
+				? ResultadoOperacao<object>.Ok("Paciente excluído com sucesso.")
+				: ResultadoOperacao<object>.Falha("Erro ao excluir paciente.");
 		}
 	}
 }

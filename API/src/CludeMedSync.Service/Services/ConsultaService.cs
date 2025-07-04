@@ -2,11 +2,6 @@
 using CludeMedSync.Domain.Models;
 using CludeMedSync.Service.DTOs;
 using CludeMedSync.Service.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CludeMedSync.Service.Services
 {

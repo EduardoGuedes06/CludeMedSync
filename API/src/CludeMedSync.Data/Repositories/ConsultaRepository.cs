@@ -1,6 +1,7 @@
 ﻿using CludeMedSync.Data.Context;
 using CludeMedSync.Domain.Interfaces;
 using CludeMedSync.Domain.Models;
+using CludeMedSync.Domain.Models.Utils.Enums;
 using Dapper;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,41 @@ namespace CludeMedSync.Data.Repositories
 			const string query = $"SELECT * FROM {nameof(Consulta)} WHERE Status <> 'Cancelada'";
 			return await connection.QueryAsync<Consulta>(query);
 		}
+
+		public async Task<Consulta> GetByRelationShip(string coluna, string valor, EnumTipoAtributo tipo)
+		{
+			using var connection = CreateConnection();
+			var query = $"SELECT * FROM {nameof(Consulta)} WHERE {coluna} <> @Valor";
+			object valorConvertido;
+
+			try
+			{
+				valorConvertido = tipo switch
+				{
+					EnumTipoAtributo.Inteiro => int.TryParse(valor, out var i) ? i : throw new FormatException("Valor inválido para inteiro."),
+					EnumTipoAtributo.Decimal => decimal.TryParse(valor, out var d) ? d : throw new FormatException("Valor inválido para decimal."),
+					EnumTipoAtributo.Booleano => valor.ToLower() switch
+					{
+						"true" or "1" => true,
+						"false" or "0" => false,
+						_ => throw new FormatException("Valor inválido para booleano.")
+					},
+					EnumTipoAtributo.Data or EnumTipoAtributo.DataHora => DateTime.TryParse(valor, out var dt) ? dt : throw new FormatException("Valor inválido para data."),
+					EnumTipoAtributo.Guid => Guid.TryParse(valor, out var guid) ? guid : throw new FormatException("Valor inválido para GUID."),
+					EnumTipoAtributo.Texto or EnumTipoAtributo.Enumerador => valor,
+					_ => throw new NotSupportedException("Tipo de atributo não suportado.")
+				};
+			}
+			catch (Exception ex)
+			{
+				throw new NotSupportedException(ex.Message);
+			}
+
+			var resultado = await connection.QueryFirstOrDefaultAsync<Consulta>(query, new { Valor = valorConvertido });
+			return resultado;
+		}
+
+
 
 		public override async Task<bool> DeleteAsync(int id)
 		{

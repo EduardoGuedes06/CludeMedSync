@@ -1,5 +1,6 @@
-﻿using CludeMedSync.Domain.Interfaces;
-using CludeMedSync.Services.DTOs;
+﻿using CludeMedSync.Service.Common;
+using CludeMedSync.Service.DTOs;
+using CludeMedSync.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CludeMedSync.Api.Controllers
@@ -45,7 +46,6 @@ namespace CludeMedSync.Api.Controllers
 		/// <response code="500">Erro interno</response>
 		[HttpGet("{id}")]
 		[ProducesResponseType(typeof(PacienteDto), StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public async Task<IActionResult> GetById(int id)
 		{
 			var paciente = await _pacienteService.GetByIdAsync(id);
@@ -60,19 +60,16 @@ namespace CludeMedSync.Api.Controllers
 		/// <response code="201">Paciente criado com sucesso</response>
 		/// <response code="400">Dados inválidos ou paciente já existente</response>
 		[HttpPost]
-		[ProducesResponseType(StatusCodes.Status201Created)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(ResultadoOperacao<PacienteDto>), StatusCodes.Status201Created)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status400BadRequest)]
 		public async Task<IActionResult> Create([FromBody] CreatePacienteDto pacienteDto)
 		{
-			try
-			{
-				var novoPaciente = await _pacienteService.CreateAsync(pacienteDto);
-				return CreatedAtAction(nameof(GetById), new { id = novoPaciente.Id }, novoPaciente);
-			}
-			catch (InvalidOperationException ex)
-			{
-				return BadRequest(new { message = ex.Message });
-			}
+			var resultado = await _pacienteService.CreateAsync(pacienteDto);
+
+			if (!resultado.Sucesso)
+				return BadRequest(resultado);
+
+			return Ok(resultado);
 		}
 
 		/// <summary>
@@ -87,7 +84,6 @@ namespace CludeMedSync.Api.Controllers
 		/// <response code="500">Erro interno</response>
 		[HttpPut("{id}")]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public async Task<IActionResult> Update(int id, [FromBody] CreatePacienteDto pacienteDto)
 		{
 			var sucesso = await _pacienteService.UpdateAsync(id, pacienteDto);
@@ -95,21 +91,27 @@ namespace CludeMedSync.Api.Controllers
 		}
 
 		/// <summary>
-		/// Remove um paciente do sistema.
+		/// Desativa/Remove um paciente do sistema.
 		/// </summary>
-		/// <param name="id">ID do paciente a ser excluído.</param>
+		/// <param name="id">ID do paciente a ser desativado/removido.</param>
 		/// <returns>Status da exclusão.</returns>
-		/// <response code="204">Paciente excluído com sucesso</response>
+		/// <response code="204">Paciente desativado/removido com sucesso</response>
 		/// <response code="404">Paciente não encontrado</response>
-		/// <response code="400">Dados inválidos</response>
+		/// <response code="400">Dados Invalidos ou conflito na deleção</response>
 		/// <response code="500">Erro interno</response>
 		[HttpDelete("{id}")]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status204NoContent)]
+		[ProducesResponseType(typeof(ResultadoOperacao<PacienteDto>), StatusCodes.Status400BadRequest)]
+
 		public async Task<IActionResult> Delete(int id)
 		{
-			var sucesso = await _pacienteService.DeleteAsync(id);
-			return sucesso ? NoContent() : NotFound();
+			var resultado = await _pacienteService.DeleteAsync(id);
+
+			if (!resultado.Sucesso)
+				return BadRequest(new { Sucesso = false, mensagem = resultado.Mensagem, dados = resultado.Dados });
+
+			return NoContent();
 		}
 	}
 

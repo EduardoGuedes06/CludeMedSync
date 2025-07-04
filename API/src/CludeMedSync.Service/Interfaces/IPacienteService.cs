@@ -1,14 +1,15 @@
 ﻿
-using CludeMedSync.Services.DTOs;
+using CludeMedSync.Service.Common;
+using CludeMedSync.Service.DTOs;
 
-namespace CludeMedSync.Domain.Interfaces
+namespace CludeMedSync.Service.Interfaces
 {
 	public interface IPacienteService
 	{
 		Task<PacienteDto?> GetByIdAsync(int id);
 		Task<IEnumerable<PacienteDto>> GetAllAsync();
-		Task<PacienteDto> CreateAsync(CreatePacienteDto pacienteDto);
 		Task<bool> UpdateAsync(int id, CreatePacienteDto pacienteDto);
-		Task<bool> DeleteAsync(int id);
+		Task<ResultadoOperacao<object>> DeleteAsync(int id);
+		Task<ResultadoOperacao<PacienteDto>> CreateAsync(CreatePacienteDto pacienteDto);
 	}
 }

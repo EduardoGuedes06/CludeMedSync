@@ -1,6 +1,0 @@
-@CludeMedSync.Api_HostAddress = http://localhost:5053
-
-GET {{CludeMedSync.Api_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

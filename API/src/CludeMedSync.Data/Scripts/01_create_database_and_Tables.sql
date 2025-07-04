@@ -36,9 +36,6 @@ CREATE TABLE IF NOT EXISTS Paciente (
     Ativo BOOLEAN NOT NULL DEFAULT TRUE
 );
 
-CREATE UNIQUE INDEX IX_Paciente_CPF ON Paciente(CPF);
-CREATE UNIQUE INDEX IX_Paciente_Email ON Paciente(Email);
-
 CREATE TABLE IF NOT EXISTS Profissional (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     NomeCompleto VARCHAR(200) NOT NULL,
@@ -48,9 +45,6 @@ CREATE TABLE IF NOT EXISTS Profissional (
     Telefone VARCHAR(20),
     Ativo BOOLEAN NOT NULL DEFAULT TRUE
 );
-
-CREATE UNIQUE INDEX IX_Profissional_CRM ON Profissional(CRM);
-CREATE UNIQUE INDEX IX_Profissional_Email ON Profissional(Email);
 
 
 CREATE TABLE IF NOT EXISTS Consulta (
@@ -63,6 +57,19 @@ CREATE TABLE IF NOT EXISTS Consulta (
     Status VARCHAR(50) NOT NULL,
     FOREIGN KEY (PacienteId) REFERENCES Paciente(Id),
     FOREIGN KEY (ProfissionalId) REFERENCES Profissional(Id)
+);
+
+CREATE TABLE IF NOT EXISTS ConsultaLog (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    ConsultaIdOriginal INT NOT NULL,
+    NomePaciente VARCHAR(200) NOT NULL,
+    NomeProfissional VARCHAR(200) NOT NULL,
+    EspecialidadeProfissional VARCHAR(100),
+    DataHoraInicio DATETIME NOT NULL,
+    DataHoraFim DATETIME NOT NULL,
+    Motivo VARCHAR(500),
+    Status VARCHAR(50) NOT NULL,
+    DataLog TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IX_Consulta_Paciente_Profissional ON Consulta(PacienteId, ProfissionalId);

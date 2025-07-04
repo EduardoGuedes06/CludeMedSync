@@ -9,6 +9,6 @@ namespace CludeMedSync.Domain.Interfaces
 {
 	public interface IPacienteRepository : IRepository<Paciente>
 	{
-		Task<Paciente?> GetByCpfAsync(string cpf);
+		Task<(bool existeConflito, string mensagem)> VerificarDuplicidadePacienteAsync(string cpf, string email, string? telefone);
 	}
 }
