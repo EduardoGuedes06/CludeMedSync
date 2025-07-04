@@ -4,23 +4,25 @@ CREATE DATABASE CludeMedSync;
 
 USE CludeMedSync;
 
-CREATE TABLE IF NOT EXISTS Usuario (
-    Id VARCHAR(36) PRIMARY KEY,
-    UserName VARCHAR(256) NOT NULL,
-    NormalizedUserName VARCHAR(256) NOT NULL,
-    Email VARCHAR(256) NOT NULL,
-    NormalizedEmail VARCHAR(256) NOT NULL,
+CREATE TABLE Usuario (
+    Id VARCHAR(36) NOT NULL PRIMARY KEY,
+    UserName VARCHAR(256) NULL,
+    NormalizedUserName VARCHAR(256) NULL,
+    Email VARCHAR(256) NULL,
+    NormalizedEmail VARCHAR(256) NULL,
     EmailConfirmed BOOLEAN NOT NULL DEFAULT FALSE,
-    PasswordHash TEXT,
-    SecurityStamp TEXT,
-    ConcurrencyStamp TEXT,
-    PhoneNumber TEXT,
+    PasswordHash TEXT NULL,
+    SecurityStamp TEXT NULL,
+    ConcurrencyStamp TEXT NULL,
+    PhoneNumber TEXT NULL,
     PhoneNumberConfirmed BOOLEAN NOT NULL DEFAULT FALSE,
     TwoFactorEnabled BOOLEAN NOT NULL DEFAULT FALSE,
-    LockoutEnd DATETIME,
+    LockoutEnd DATETIME NULL,
     LockoutEnabled BOOLEAN NOT NULL DEFAULT FALSE,
     AccessFailedCount INT NOT NULL DEFAULT 0,
-    Role VARCHAR(100) NOT NULL
+    Role VARCHAR(100) NOT NULL,
+    RefreshToken VARCHAR(256) NULL,
+    RefreshTokenExpiryTime DATETIME NULL
 );
 
 CREATE INDEX IX_Usuario_NormalizedEmail ON Usuario(NormalizedEmail);

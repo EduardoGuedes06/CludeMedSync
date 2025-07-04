@@ -6,6 +6,8 @@ builder.Services.AddMvcConfiguration();
 builder.Services.ResolveDependencies();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfig();
+builder.Services.AddAuthConfig(builder.Configuration);
+
 var app = builder.Build();
 
 app.UseGlobalExceptionHandler();
@@ -18,6 +20,8 @@ if (app.Environment.IsDevelopment())
 app.UseRequestLocalization();
 
 app.UseHttpsRedirection();
+
+app.UseAuthConfig();
 
 app.UseAuthorization();
 
