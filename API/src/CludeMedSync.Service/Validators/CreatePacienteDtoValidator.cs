@@ -21,6 +21,11 @@ namespace CludeMedSync.Service.Validators
 				.Length(11).WithMessage("O CPF deve ter 11 caracteres.")
 				.Must(cpf => cpf.All(char.IsDigit)).WithMessage("O CPF deve conter apenas números.");
 
+			RuleFor(x => x.Telefone)
+				.NotEmpty().WithMessage("O Telefone é obrigatório.")
+				.Matches(@"^\(\d{2}\)\s?\d{4,5}-\d{4}$")
+				.WithMessage("O formato do telefone deve ser (XX) XXXXX-XXXX ou (XX) XXXX-XXXX.");
+
 			RuleFor(x => x.DataNascimento)
 				.NotEmpty().WithMessage("A data de nascimento é obrigatória.")
 				.LessThan(DateTime.Now).WithMessage("A data de nascimento não pode ser no futuro.");

@@ -1,6 +1,8 @@
-﻿using CludeMedSync.Service.Validators;
+﻿using CludeMedSync.Service.Common;
+using CludeMedSync.Service.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CludeMedSync.Api.Configuration
 {
@@ -10,9 +12,12 @@ namespace CludeMedSync.Api.Configuration
 		{
 			services.AddControllers()
 				.AddDataAnnotationsLocalization();
+
 			services.AddFluentValidationAutoValidation();
 			services.AddValidatorsFromAssemblyContaining<CreatePacienteDtoValidator>();
+
 			services.AddLocalization(options => options.ResourcesPath = "Resources");
+
 			services.Configure<RequestLocalizationOptions>(options =>
 			{
 				var supportedCultures = new[] { "pt-BR" };
@@ -21,7 +26,28 @@ namespace CludeMedSync.Api.Configuration
 				options.AddSupportedUICultures(supportedCultures);
 			});
 
+			services.Configure<ApiBehaviorOptions>(options =>
+			{
+				options.InvalidModelStateResponseFactory = context =>
+				{
+					var erros = context.ModelState
+						.Where(e => e.Value.Errors.Count > 0)
+						.ToDictionary(
+							e => e.Key,
+							e => e.Value.Errors.Select(er => er.ErrorMessage).ToArray()
+						);
+
+					var resultado = ResultadoOperacao<object>.Falha(
+						"Um ou mais erros de validação foram encontrados.",
+						erros
+					);
+
+					return new BadRequestObjectResult(resultado);
+				};
+			});
+
 			return services;
 		}
 	}
+
 }

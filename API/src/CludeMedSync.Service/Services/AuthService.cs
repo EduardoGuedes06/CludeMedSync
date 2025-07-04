@@ -6,12 +6,10 @@ using CludeMedSync.Service.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CludeMedSync.Service.Services;
 
@@ -68,10 +66,16 @@ public class AuthService : IAuthService
 		}
 
 		var accessToken = GenerateAccessToken(user);
+		var refreshToken = GenerateRefreshToken();
+
+		user.RefreshToken = refreshToken;
+		user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpirationDays);
+
+		await _userManager.UpdateAsync(user);
 
 		var tokenResponse = new TokenResponseDto(
 			AccessToken: new JwtSecurityTokenHandler().WriteToken(accessToken),
-			RefreshToken: "implementar_refresh_token_aqui"
+			RefreshToken: refreshToken
 		);
 
 		return ResultadoOperacao<TokenResponseDto>.Ok("Login realizado com sucesso.", tokenResponse);
@@ -81,7 +85,8 @@ public class AuthService : IAuthService
 	{
 		var authClaims = new List<Claim>
 		{
-			new(ClaimTypes.Name, user.UserName),
+			new(ClaimTypes.NameIdentifier, user.Id),
+            new(ClaimTypes.Name, user.UserName),
 			new(ClaimTypes.Email, user.Email),
 			new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 			new(ClaimTypes.Role, user.Role)
@@ -92,11 +97,19 @@ public class AuthService : IAuthService
 		var token = new JwtSecurityToken(
 			issuer: _jwtSettings.Issuer,
 			audience: _jwtSettings.Audience,
-			expires: DateTime.Now.AddMinutes(_jwtSettings.AccessTokenExpirationMinutes),
+			expires: DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationMinutes),
 			claims: authClaims,
 			signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
 		);
 
 		return token;
+	}
+
+	private static string GenerateRefreshToken()
+	{
+		var randomNumber = new byte[64];
+		using var rng = RandomNumberGenerator.Create();
+		rng.GetBytes(randomNumber);
+		return Convert.ToBase64String(randomNumber);
 	}
 }

@@ -9,7 +9,7 @@ namespace CludeMedSync.Api.Controllers
 	/// Controller responsável pelas operações de consultas médicas.
 	/// </summary>
 
-	[Authorize]
+	//[Authorize]
 	[ApiController]
 	[Route("api/[controller]")]
 	public class ConsultasController : ControllerBase

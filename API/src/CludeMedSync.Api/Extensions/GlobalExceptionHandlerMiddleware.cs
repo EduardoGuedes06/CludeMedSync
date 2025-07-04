@@ -1,4 +1,5 @@
 ﻿using CludeMedSync.Domain.Models.Exeptions;
+using CludeMedSync.Service.Common;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
@@ -34,7 +35,7 @@ namespace CludeMedSync.Api.Extensions
 		{
 			_logger.LogError(exception, "Ocorreu uma exceção não tratada para a requisição {Path}", context.Request.Path);
 
-			var problemDetails = CreateProblemDetails(context, exception);
+			var problemDetails = CreateErroPadronizado(context, exception);
 
 			var jsonResponse = JsonSerializer.Serialize(problemDetails, new JsonSerializerOptions
 			{
@@ -47,51 +48,39 @@ namespace CludeMedSync.Api.Extensions
 			await context.Response.WriteAsync(jsonResponse);
 		}
 
-		private ProblemDetails CreateProblemDetails(HttpContext context, Exception exception)
+		private ResultadoOperacao<object> CreateErroPadronizado(HttpContext context, Exception exception)
 		{
-			var problemDetails = new ProblemDetails
-			{
-				Instance = context.Request.Path,
-				Status = (int)HttpStatusCode.InternalServerError,
-				Title = "Erro interno inesperado.",
-				Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
-				Detail = "Ocorreu um erro inesperado ao processar sua requisição."
-			};
+			var mensagemPadrao = "Ocorreu um erro inesperado ao processar sua requisição.";
+			object? dados = null;
 
 			switch (exception)
 			{
 				case ValidationException validationException:
-					problemDetails.Status = (int)HttpStatusCode.BadRequest;
-					problemDetails.Title = "Erro de validação.";
-					problemDetails.Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1";
-					problemDetails.Detail = "Uma ou mais regras de negócio não foram atendidas.";
+					mensagemPadrao = "Uma ou mais regras de negócio não foram atendidas.";
 					if (validationException.Errors.Any())
 					{
-						problemDetails.Extensions["errors"] = validationException.Errors;
+						dados = new { errors = validationException.Errors };
 					}
 					break;
 
 				case KeyNotFoundException:
-					problemDetails.Status = (int)HttpStatusCode.NotFound;
-					problemDetails.Title = "Recurso não encontrado.";
-					problemDetails.Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4";
-					problemDetails.Detail = exception.Message;
+					mensagemPadrao = "Recurso não encontrado.";
 					break;
 
 				case InvalidOperationException or ArgumentException:
-					problemDetails.Status = (int)HttpStatusCode.BadRequest;
-					problemDetails.Title = "Requisição inválida.";
-					problemDetails.Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1";
-					problemDetails.Detail = exception.Message;
+					mensagemPadrao = exception.Message;
+					break;
+
+				default:
+					if (_env.IsDevelopment())
+					{
+						dados = new { trace = exception.StackTrace };
+					}
 					break;
 			}
 
-			if (_env.IsDevelopment())
-			{
-				problemDetails.Extensions["trace"] = exception.StackTrace;
-			}
-
-			return problemDetails;
+			return ResultadoOperacao<object>.Falha(mensagemPadrao, dados);
 		}
+
 	}
 }

@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS Paciente (
     DataNascimento DATE NOT NULL,
     CPF VARCHAR(11) NOT NULL,
     Email VARCHAR(150) NOT NULL,
-    Telefone VARCHAR(20),
+    Telefone VARCHAR(15),
     Ativo BOOLEAN NOT NULL DEFAULT TRUE
 );
 
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS Profissional (
     Especialidade VARCHAR(100) NOT NULL,
     CRM VARCHAR(20) NOT NULL,
     Email VARCHAR(150) NOT NULL,
-    Telefone VARCHAR(20),
+    Telefone VARCHAR(15),
     Ativo BOOLEAN NOT NULL DEFAULT TRUE
 );
 

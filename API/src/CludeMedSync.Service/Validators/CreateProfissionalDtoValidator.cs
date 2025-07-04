@@ -25,6 +25,11 @@ namespace CludeMedSync.Service.Validators
 				.NotEmpty().WithMessage("O CRM é obrigatório.")
 				.MaximumLength(20).WithMessage("O CRM deve ter no máximo 20 caracteres.");
 
+			RuleFor(x => x.Telefone)
+				.NotEmpty().WithMessage("O Telefone é obrigatório.")
+				.Matches(@"^\(\d{2}\)\s?\d{4,5}-\d{4}$")
+				.WithMessage("O formato do telefone deve ser (XX) XXXXX-XXXX ou (XX) XXXX-XXXX.");
+
 			RuleFor(x => x.Email)
 				.NotEmpty().WithMessage("O e-mail é obrigatório.")
 				.EmailAddress().WithMessage("O e-mail fornecido não é válido.");

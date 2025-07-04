@@ -10,6 +10,7 @@ namespace CludeMedSync.Service.Common
 	{
 		public bool Sucesso { get; set; }
 		public string Mensagem { get; set; }
+		public int? Status { get; set; }
 		public T? Dados { get; set; }
 
 		public static ResultadoOperacao<T> Ok(string mensagem, T? dados = default)
@@ -18,7 +19,8 @@ namespace CludeMedSync.Service.Common
 			{
 				Sucesso = true,
 				Mensagem = mensagem,
-				Dados = dados
+				Dados = dados,
+				Status = 200
 			};
 		}
 
@@ -28,7 +30,8 @@ namespace CludeMedSync.Service.Common
 			{
 				Sucesso = false,
 				Mensagem = mensagem,
-				Dados = dados
+				Dados = dados,
+				Status = 400
 			};
 		}
 	}

@@ -10,7 +10,7 @@ namespace CludeMedSync.Api.Controllers
 	/// Controller responsável pelas operações relacionadas a pacientes.
 	/// </summary>
 	
-	[Authorize]
+	//[Authorize]
 	[ApiController]
 	[Route("api/[controller]")]
 	public class PacientesController : ControllerBase
