@@ -1,6 +1,7 @@
 ﻿using CludeMedSync.Service.Common;
 using CludeMedSync.Service.DTOs;
 using CludeMedSync.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CludeMedSync.Api.Controllers
@@ -8,6 +9,8 @@ namespace CludeMedSync.Api.Controllers
 	/// <summary>
 	/// Controller responsável pelas operações relacionadas a pacientes.
 	/// </summary>
+	
+	[Authorize]
 	[ApiController]
 	[Route("api/[controller]")]
 	public class PacientesController : ControllerBase
