@@ -24,15 +24,16 @@ namespace CludeMedSync.Service.Common
 			};
 		}
 
-		public static ResultadoOperacao<T> Falha(string mensagem, T? dados = default)
+		public static ResultadoOperacao<T> Falha(string mensagem, T? dados = default, int? status = 400)
 		{
 			return new ResultadoOperacao<T>
 			{
 				Sucesso = false,
 				Mensagem = mensagem,
 				Dados = dados,
-				Status = 400
+				Status = status
 			};
 		}
+
 	}
 }

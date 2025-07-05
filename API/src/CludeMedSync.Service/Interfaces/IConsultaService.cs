@@ -1,12 +1,13 @@
-﻿using CludeMedSync.Service.DTOs;
+﻿using CludeMedSync.Service.Common;
+using CludeMedSync.Service.DTOs;
 
 namespace CludeMedSync.Service.Interfaces
 {
 	public interface IConsultaService
 	{
-		Task<ConsultaDto?> GetByIdAsync(int id);
+		Task<ResultadoOperacao<ConsultaDto>> AgendarAsync(AgendarConsultaDto dto, Guid usuarioId);
+		Task<ResultadoOperacao<object>> CancelarAsync(int id, Guid usuarioId);
 		Task<IEnumerable<ConsultaDto>> GetAllAsync();
-		Task<ConsultaDto> AgendarAsync(AgendarConsultaDto consultaDto);
-		Task<bool> CancelarAsync(int id);
+		Task<ConsultaDto?> GetByIdAsync(int id);
 	}
 }

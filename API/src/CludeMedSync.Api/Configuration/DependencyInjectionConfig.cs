@@ -17,6 +17,7 @@ namespace CludeMedSync.Api.Configuration
 			services.AddScoped<IPacienteRepository, PacienteRepository>();
 			services.AddScoped<IProfissionalRepository, ProfissionalRepository>();
 			services.AddScoped<IConsultaRepository, ConsultaRepository>();
+			services.AddScoped<IConsultaLogRepository, ConsultaLogRepository>();
 
 			services.AddScoped<IUserStore<Usuario>, DapperUserStore>();
 

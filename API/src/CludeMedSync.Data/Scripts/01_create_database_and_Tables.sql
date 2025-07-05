@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS Profissional (
 
 CREATE TABLE IF NOT EXISTS Consulta (
     Id INT AUTO_INCREMENT PRIMARY KEY,
+    UsuarioId VARCHAR(36) NOT NULL,
     PacienteId INT NOT NULL,
     ProfissionalId INT NOT NULL,
     DataHoraInicio DATETIME NOT NULL,
@@ -63,10 +64,12 @@ CREATE TABLE IF NOT EXISTS Consulta (
 
 CREATE TABLE IF NOT EXISTS ConsultaLog (
     Id INT AUTO_INCREMENT PRIMARY KEY,
-    ConsultaIdOriginal INT NOT NULL,
+	UsuarioId VARCHAR(36) NOT NULL,
+    ConsultaId INT NOT NULL,
+    PacienteId INT NOT NULL,
+    ProfissionalId INT NOT NULL,
     NomePaciente VARCHAR(200) NOT NULL,
     NomeProfissional VARCHAR(200) NOT NULL,
-    EspecialidadeProfissional VARCHAR(100),
     DataHoraInicio DATETIME NOT NULL,
     DataHoraFim DATETIME NOT NULL,
     Motivo VARCHAR(500),

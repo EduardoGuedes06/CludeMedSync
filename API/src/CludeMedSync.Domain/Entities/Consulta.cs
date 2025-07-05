@@ -9,6 +9,7 @@ namespace CludeMedSync.Domain.Models
 	public class Consulta
 	{
 		public int Id { get; private set; }
+		public Guid UsuarioId { get; set; }
 		public int PacienteId { get; private set; }
 		public int ProfissionalId { get; private set; }
 		public DateTime DataHoraInicio { get; private set; }
@@ -16,14 +17,15 @@ namespace CludeMedSync.Domain.Models
 		public string? Motivo { get; private set; }
 		public string Status { get; private set; }
 
-		protected Consulta() { }
+		protected Consulta() {   }
 
-		public static Consulta Agendar(int pacienteId, int profissionalId, DateTime dataHoraInicio, string? motivo)
+		public static Consulta Agendar(Guid usuarioId, int pacienteId, int profissionalId, DateTime dataHoraInicio, string? motivo)
 		{
 			ValidarHorario(dataHoraInicio);
 
 			return new Consulta
 			{
+				UsuarioId = usuarioId,
 				PacienteId = pacienteId,
 				ProfissionalId = profissionalId,
 				DataHoraInicio = dataHoraInicio,

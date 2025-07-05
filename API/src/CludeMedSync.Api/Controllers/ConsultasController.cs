@@ -1,7 +1,10 @@
-﻿using CludeMedSync.Service.DTOs;
+﻿using CludeMedSync.Service.Common;
+using CludeMedSync.Service.DTOs;
 using CludeMedSync.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CludeMedSync.Api.Controllers
 {
@@ -12,7 +15,7 @@ namespace CludeMedSync.Api.Controllers
 	//[Authorize]
 	[ApiController]
 	[Route("api/[controller]")]
-	public class ConsultasController : ControllerBase
+	public class ConsultasController : BaseController
 	{
 		private readonly IConsultaService _consultaService;
 
@@ -63,26 +66,20 @@ namespace CludeMedSync.Api.Controllers
 		/// <response code="404">Consulta não encontrada</response>
 		/// <response code="500">Erro interno</response>
 		[HttpPost("agendar")]
-		[ProducesResponseType(StatusCodes.Status201Created)]
+		[ProducesResponseType(typeof(ResultadoOperacao<PacienteDto>), StatusCodes.Status201Created)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status404NotFound)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> Agendar([FromBody] AgendarConsultaDto consultaDto)
 		{
-			try
-			{
-				var novaConsulta = await _consultaService.AgendarAsync(consultaDto);
-				return CreatedAtAction(nameof(GetById), new { id = novaConsulta.Id }, novaConsulta);
-			}
-			catch (KeyNotFoundException ex)
-			{
-				return NotFound(new { message = ex.Message });
-			}
-			catch (InvalidOperationException ex)
-			{
-				return BadRequest(new { message = ex.Message });
-			}
-			catch (ArgumentException ex)
-			{
-				return BadRequest(new { message = ex.Message });
-			}
+			var estadoUsuario = ObterDadosUsuarioAutenticado();
+			if (!estadoUsuario.Sucesso)
+				return Unauthorized(estadoUsuario);
+			var resultado = await _consultaService.AgendarAsync(consultaDto, UsuarioId);
+			if (!resultado.Sucesso)
+				return BadRequest(resultado);
+
+			return Ok(resultado);
 		}
 
 		/// <summary>
@@ -95,12 +92,21 @@ namespace CludeMedSync.Api.Controllers
 		/// <response code="404">Consulta não encontrada</response>
 		/// <response code="500">Erro interno</response>
 		[HttpPatch("{id}/cancelar")]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(typeof(ResultadoOperacao<ConsultaDto>), StatusCodes.Status204NoContent)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status404NotFound)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> Cancelar(int id)
 		{
-			var sucesso = await _consultaService.CancelarAsync(id);
-			return sucesso ? NoContent() : NotFound();
+
+			var resultado = await _consultaService.CancelarAsync(id, UsuarioId);
+
+			if (!resultado.Sucesso)
+				return BadRequest(resultado);
+
+			return NoContent();
 		}
+
 	}
 
 }
