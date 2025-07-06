@@ -1,4 +1,5 @@
-﻿using CludeMedSync.Domain.Interfaces;
+﻿using AutoMapper;
+using CludeMedSync.Domain.Interfaces;
 using CludeMedSync.Domain.Models;
 using CludeMedSync.Domain.Models.Utils.Enums;
 using CludeMedSync.Service.Common;
@@ -11,26 +12,28 @@ namespace CludeMedSync.Service.Services
 	{
 		private readonly IPacienteRepository _pacienteRepository;
 		private readonly IConsultaRepository _consultaRepository;
+		private readonly IMapper _mapper;
 
 		public PacienteService(
 			IPacienteRepository pacienteRepository, 
-			IConsultaRepository consultaRepository)
+			IConsultaRepository consultaRepository,
+			IMapper mapper)
 		{
 			_pacienteRepository = pacienteRepository;
 			_consultaRepository = consultaRepository;
+			_mapper = mapper;
 		}
 
 		public async Task<PacienteDto?> GetByIdAsync(int id)
 		{
 			var paciente = await _pacienteRepository.GetByIdAsync(id);
-			if (paciente == null) return null;
-			return new PacienteDto(paciente.Id, paciente.NomeCompleto, paciente.DataNascimento, paciente.CPF, paciente.Email, paciente.Telefone);
+			return _mapper.Map<PacienteDto>(paciente);
 		}
 
 		public async Task<IEnumerable<PacienteDto>> GetAllAsync()
 		{
 			var pacientes = await _pacienteRepository.GetAllAsync();
-			return pacientes.Select(p => new PacienteDto(p.Id, p.NomeCompleto, p.DataNascimento, p.CPF, p.Email, p.Telefone));
+			return _mapper.Map<IEnumerable<PacienteDto>>(pacientes);
 		}
 
 		public async Task<ResultadoOperacao<PacienteDto>> CreateAsync(CreatePacienteDto pacienteDto)
@@ -44,42 +47,24 @@ namespace CludeMedSync.Service.Services
 			if (existe)
 				return ResultadoOperacao<PacienteDto>.Falha(mensagem);
 
-			var paciente = new Paciente
-			{
-				NomeCompleto = pacienteDto.NomeCompleto,
-				DataNascimento = pacienteDto.DataNascimento,
-				CPF = pacienteDto.CPF,
-				Email = pacienteDto.Email,
-				Telefone = pacienteDto.Telefone,
-				Ativo = true
-			};
+			var paciente = _mapper.Map<Paciente>(pacienteDto);
+			paciente.Ativo = true;
 
 			var novoId = await _pacienteRepository.AddAsync(paciente);
 			paciente.Id = novoId;
 
-			var dto = new PacienteDto(
-				paciente.Id,
-				paciente.NomeCompleto,
-				paciente.DataNascimento,
-				paciente.CPF,
-				paciente.Email,
-				paciente.Telefone
-			);
+			var dto = _mapper.Map<PacienteDto>(paciente);
 
 			return ResultadoOperacao<PacienteDto>.Ok("Paciente cadastrado com sucesso.", dto);
-		}
 
+		}
 
 		public async Task<bool> UpdateAsync(int id, CreatePacienteDto pacienteDto)
 		{
 			var paciente = await _pacienteRepository.GetByIdAsync(id);
 			if (paciente == null) return false;
 
-			paciente.NomeCompleto = pacienteDto.NomeCompleto;
-			paciente.DataNascimento = pacienteDto.DataNascimento;
-			paciente.CPF = pacienteDto.CPF;
-			paciente.Email = pacienteDto.Email;
-			paciente.Telefone = pacienteDto.Telefone;
+			_mapper.Map(pacienteDto, paciente);
 
 			return await _pacienteRepository.UpdateAsync(paciente);
 		}

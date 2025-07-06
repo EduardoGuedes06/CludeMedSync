@@ -72,12 +72,77 @@ namespace CludeMedSync.Api.Controllers
 		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> Agendar([FromBody] AgendarConsultaDto consultaDto)
 		{
-			var estadoUsuario = ObterDadosUsuarioAutenticado();
-			if (!estadoUsuario.Sucesso)
-				return Unauthorized(estadoUsuario);
 			var resultado = await _consultaService.AgendarAsync(consultaDto, UsuarioId);
 			if (!resultado.Sucesso)
 				return BadRequest(resultado);
+
+			return Ok(resultado);
+		}
+
+
+		/// <summary>
+		/// Confirma uma consulta agendada.
+		/// </summary>
+		/// <param name="id">Dados da consulta a ser agendada.</param>
+		/// <returns>Status da operação.</returns>
+		/// <response code="200">Consulta atualizada com sucesso</response>
+		/// <response code="400">Dados inválidos</response>
+		/// <response code="404">Consulta não encontrada</response>
+		/// <response code="500">Erro interno</response>
+		[HttpPatch("confirmar/{id}")]
+		[ProducesResponseType(typeof(ResultadoOperacao<ConsultaDto>), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status404NotFound)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status500InternalServerError)]
+		public async Task<IActionResult> Confirmar([FromRoute] int id)
+		{
+			var resultado = await _consultaService.ConfirmarAsync(id, UsuarioId);
+			if (!resultado.Sucesso)
+				return StatusCode(resultado.Status ?? 400, resultado);
+
+			return Ok(resultado);
+		}
+
+		/// <summary>
+		/// Inicia uma consulta confirmada.
+		/// </summary>
+		/// <param name="id">O ID da consulta.</param>		
+		/// <response code="200">Consulta iniciada com sucesso</response>
+		/// <response code="400">Dados inválidos</response>
+		/// <response code="404">Consulta não encontrada</response>
+		/// <response code="500">Erro interno</response>
+		[HttpPatch("iniciar/{id}")]
+		[ProducesResponseType(typeof(ResultadoOperacao<ConsultaDto>), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status404NotFound)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status500InternalServerError)]
+		public async Task<IActionResult> Iniciar([FromRoute] int id)
+		{
+			var resultado = await _consultaService.IniciarAsync(id, UsuarioId);
+			if (!resultado.Sucesso)
+				return StatusCode(resultado.Status ?? 400, resultado);
+
+			return Ok(resultado);
+		}
+
+		/// <summary>
+		/// Finaliza uma consulta que está em andamento.
+		/// </summary>
+		/// <param name="id">O ID da consulta.</param>
+		/// <response code="200">Consulta Finalizada com sucesso</response>
+		/// <response code="400">Dados inválidos</response>
+		/// <response code="404">Consulta não encontrada</response>
+		/// <response code="500">Erro interno</response>
+		[HttpPatch("finalizar/{id}")]
+		[ProducesResponseType(typeof(ResultadoOperacao<ConsultaDto>), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status404NotFound)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status500InternalServerError)]
+		public async Task<IActionResult> Finalizar([FromRoute] int id)
+		{
+			var resultado = await _consultaService.FinalizarAsync(id, UsuarioId);
+			if (!resultado.Sucesso)
+				return StatusCode(resultado.Status ?? 400, resultado);
 
 			return Ok(resultado);
 		}
@@ -91,12 +156,12 @@ namespace CludeMedSync.Api.Controllers
 		/// <response code="400">Dados inválidos</response>
 		/// <response code="404">Consulta não encontrada</response>
 		/// <response code="500">Erro interno</response>
-		[HttpPatch("{id}/cancelar")]
+		[HttpPatch("cancelar/{id}")]
 		[ProducesResponseType(typeof(ResultadoOperacao<ConsultaDto>), StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status404NotFound)]
 		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> Cancelar(int id)
+		public async Task<IActionResult> Cancelar([FromRoute] int id)
 		{
 
 			var resultado = await _consultaService.CancelarAsync(id, UsuarioId);
@@ -107,6 +172,49 @@ namespace CludeMedSync.Api.Controllers
 			return NoContent();
 		}
 
+		/// <summary>
+		/// Marca uma consulta para a qual o paciente não compareceu.
+		/// </summary>
+		/// <param name="id">O ID da consulta.</param>
+		/// <response code="200">Consulta atualizada com sucesso</response>
+		/// <response code="400">Dados inválidos</response>
+		/// <response code="404">Consulta não encontrada</response>
+		/// <response code="500">Erro interno</response>
+		[HttpPatch("paciente-nao-compareceu/{id}")]
+		[ProducesResponseType(typeof(ResultadoOperacao<ConsultaDto>), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status404NotFound)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status500InternalServerError)]
+		public async Task<IActionResult> MarcarComoPacienteNaoCompareceu([FromRoute] int id)
+		{
+			var resultado = await _consultaService.MarcarComoPacienteNaoCompareceuAsync(id, UsuarioId);
+			if (!resultado.Sucesso)
+				return StatusCode(resultado.Status ?? 400, resultado);
+
+			return Ok(resultado);
+		}
+
+		/// <summary>
+		/// Marca uma consulta para a qual o profissional não compareceu.
+		/// </summary>
+		/// <param name="id">O ID da consulta.</param>
+		/// <response code="200">Consulta atualizada com sucesso</response>
+		/// <response code="400">Dados inválidos</response>
+		/// <response code="404">Consulta não encontrada</response>
+		/// <response code="500">Erro interno</response>
+		[HttpPatch("profissional-nao-compareceu/{id}")]
+		[ProducesResponseType(typeof(ResultadoOperacao<ConsultaDto>), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status404NotFound)]
+		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status500InternalServerError)]
+		public async Task<IActionResult> MarcarComoProfissionalNaoCompareceu([FromRoute] int id)
+		{
+			var resultado = await _consultaService.MarcarComoProfissionalNaoCompareceuAsync(id, UsuarioId);
+			if (!resultado.Sucesso)
+				return StatusCode(resultado.Status ?? 400, resultado);
+
+			return Ok(resultado);
+		}
 	}
 
 }

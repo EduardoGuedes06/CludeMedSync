@@ -12,6 +12,7 @@ namespace CludeMedSync.Domain.Interfaces
 	{
 		Task<bool> ExisteConsultaNoMesmoDiaAsync(int pacienteId, int profissionalId, DateTime data);
 		Task<bool> ExisteConsultaNoMesmoHorarioAsync(int profissionalId, DateTime dataHoraInicio);
+		Task<(Consulta? consulta, Paciente? paciente, Profissional? profissional)> GetByIdComAgregadosAsync(int id);
 		Task<Consulta> GetByRelationShip(string coluna, string valor, EnumTipoAtributo tipo);
 	}
 }

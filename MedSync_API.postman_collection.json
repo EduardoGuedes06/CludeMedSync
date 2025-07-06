@@ -1,416 +1,45 @@
 {
-	"info": {
-		"_postman_id": "482f0d85-74de-4b4f-8589-0e4de80ab783",
-		"name": "MedSync_API",
-		"description": "### **🚀 Bem-vindo ao Workspace da CludeMedSync API**\n\nEste workspace serve como um guia interativo para testar e entender todas as funcionalidades da nossa API de agendamento de consultas. Siga os passos abaixo para começar.\n\n### **🔖 Como Utilizar Este Workspace**\n\n#### **Passo 1: Configurar as Variáveis de Ambiente**\n\nVariáveis permitem que você reutilize valores, como a URL base da sua API, facilitando a troca entre ambientes (desenvolvimento, produção, etc.).\n\n1. No canto superior direito, clique no ícone de olho (\"Environment Quick Look\") e depois em **\"Add\"** para criar um novo ambiente. Dê o nome de **\"CludeMedSync - Desenvolvimento\"**.\n    \n2. Adicione as seguintes variáveis:\n    \n    - **Variável:** `base_url`\n        \n        - **Valor Inicial:** `https://localhost:7235` (ou a porta HTTPS que sua API está usando)\n            \n    - **Variável:** `accessToken`\n        \n        - **Valor Inicial:** (deixe em branco)\n            \n3. Certifique-se de que o ambiente **\"CludeMedSync - Desenvolvimento\"** está selecionado no canto superior direito para que as variáveis funcionem.\n    \n\n#### **Passo 2: Autenticação (Obter o Token JWT)**\n\nNossa API é segura. Antes de acessar qualquer endpoint, você precisa se autenticar.\n\n1. **Abra a pasta** **`1. Autenticação`**.\n    \n2. **Envie a requisição** **`POST /api/auth/register`**:\n    \n    - Vá para a aba **\"Body\"**.\n        \n    - Preencha com os dados de um novo usuário.\n        \n    - Clique em **\"Send\"**. Você deve receber uma resposta de sucesso.\n        \n3. **Envie a requisição** **`POST /api/auth/login`**:\n    \n    - Use o mesmo e-mail e senha que você acabou de registrar.\n        \n    - Clique em **\"Send\"**.\n        \n    - Na resposta, você verá o `accessToken` e o `refreshToken`. A requisição já contém um script na aba **\"Tests\"** que salva automaticamente o `accessToken` na sua variável de ambiente.\n        \n\n**Script de Teste (já incluído no request de Login):**\n\n```\n// Este script captura o token da resposta e o salva na variável 'accessToken'\nvar jsonData = pm.response.json();\nif (jsonData && jsonData.dados && jsonData.dados.accessToken) {\n    pm.environment.set(\"accessToken\", jsonData.dados.accessToken);\n    console.log(\"Access Token salvo com sucesso!\");\n}\n\n ```\n\n#### **Passo 3: Executar Operações CRUD (Pacientes, Profissionais, Consultas)**\n\nAgora que você está autenticado, pode interagir com os outros endpoints.\n\n1. **Abra a pasta** **`2. Pacientes`** (ou qualquer outra pasta de recurso).\n    \n2. **Selecione uma requisição**, por exemplo, `GET /api/pacientes`.\n    \n3. Vá para a aba **\"Authorization\"**. Note que ela já está configurada para usar o tipo **\"Bearer Token\"** e a variável `{{accessToken}}`.\n    \n4. Clique em **\"Send\"**. Você deverá receber a lista de pacientes.\n    \n5. Para criar um novo paciente (`POST /api/pacientes`), vá para a aba **\"Body\"** e preencha o JSON com os dados desejados.\n    \n\n**Exemplo de JSON para o Body de** **`POST /api/pacientes`****:**\n\n```\n{\n    \"nomeCompleto\": \"Carlos Andrade\",\n    \"dataNascimento\": \"1985-05-20T00:00:00\",\n    \"cpf\": \"98765432100\",\n    \"email\": \"carlos.andrade@email.com\",\n    \"telefone\": \"11911223344\"\n}\n\n ```\n\n#### **Passo 4: Adicionar e Verificar Testes**\n\nCada requisição deve ter testes básicos para garantir que a API está se comportando como esperado.\n\n1. Em qualquer requisição, vá para a aba **\"Tests\"**.\n    \n2. Você encontrará scripts simples, como este, que verifica se a resposta foi bem-sucedida:\n    \n\n**Exemplo de Teste para um request** **`GET`****:**\n\n```\npm.test(\"Status code é 200 OK\", function () {\n    pm.response.to.have.status(200);\n});\n\n ```\n\n1. Após enviar a requisição, observe a aba **\"Test Results\"** na resposta para ver se os testes passaram.\n    \n\n### **💪 Dicas e Próximos Passos**\n\n- **Organização:** Use as pastas para manter a coleção organizada por recurso.\n    \n- **Testes Avançados:** Adicione mais testes para validar o conteúdo da resposta, não apenas o status.\n    \n- **Fluxo de Refresh Token:** Para um cenário mais avançado, crie uma requisição para a rota `/api/auth/refresh-token` para simular a renovação de um `accessToken` expirado.\n    \n\nEndFragment",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "46451387"
-	},
-	"item": [
-		{
-			"name": "Consulta",
-			"item": [
-				{
-					"name": "Consultas",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/Consultas",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"Consultas"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Consultas/{id}",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/Consultas/{{idConsulta}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"Consultas",
-								"{{idConsulta}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Consultas/agendar",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"pacienteId\": {{idPaciente}},\r\n  \"profissionalId\": {{idProfissional}},\r\n  \"dataHoraInicio\": \"{{dataHoraInicio}}\",\r\n  \"motivo\": \"string\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/Consultas/agendar",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"Consultas",
-								"agendar"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Consultas/agendar",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/Consultas/{{idConsulta}}/agendar",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"Consultas",
-								"{{idConsulta}}",
-								"agendar"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Paciente",
-			"item": [
-				{
-					"name": "Pacientes",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/Pacientes",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"Pacientes"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Pacientes/{id}",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/Pacientes/{{idPaciente}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"Pacientes",
-								"{{idPaciente}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Pacientes",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"nomeCompleto\": \"Paciente X\",\r\n  \"dataNascimento\": \"2001-07-03T22:26:14.621Z\", \r\n  \"cpf\": \"45553564034\",                                \r\n  \"email\": \"eduardoguedeslibra@gmail.com\",                         \r\n  \"telefone\": \"11999999999\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/Pacientes",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"Pacientes"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Pacientes/{id}",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"nomeCompleto\": \"Paciente X\",\r\n  \"dataNascimento\": \"2001-07-03T22:26:14.621Z\", \r\n  \"cpf\": \"45553564034\",                                \r\n  \"email\": \"eduardoguedeslibra@gmail.com\",                         \r\n  \"telefone\": \"11999999999\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}api/Pacientes/{{idPaciente}}",
-							"host": [
-								"{{base_url}}api"
-							],
-							"path": [
-								"Pacientes",
-								"{{idPaciente}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Pacientes/{id}",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/Pacientes/{{idPaciente}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"Pacientes",
-								"{{idPaciente}}"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Profissional",
-			"item": [
-				{
-					"name": "Profissionais",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/Profissionais",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"Profissionais"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Profissionais/{id}",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/Profissionais/{{idProfissional}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"Profissionais",
-								"{{idProfissional}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Profissionais",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"nomeCompleto\": \"Profissional de Teste\",\r\n  \"especialidade\": \"teste\",\r\n  \"crm\": \"1234567891234567890\",\r\n  \"email\": \"profissional@gmail.com\",\r\n  \"telefone\": \"11999999999\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/Profissionais",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"Profissionais"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Profissionais/{id}",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/Profissionais/{{idProfissional}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"Profissionais",
-								"{{idProfissional}}"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Autenticacão",
-			"item": [
-				{
-					"name": "Register",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"teste@gmail.com\",\r\n  \"password\": \"Teste@123\",\r\n  \"confirmPassword\": \"Teste@123\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/auth/register",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"teste@gmail.com\",\r\n  \"password\": \"Teste@123\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/auth/login",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"login"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "id",
-			"value": "1"
-		},
+	"id": "45f0d8a6-4428-4b0f-96b5-75d3f5728647",
+	"name": "MedSync_API",
+	"values": [
 		{
 			"key": "base_url",
-			"value": "https://localhost:XXXX"
+			"value": "https://localhost:7235",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "idConsulta",
+			"value": "1",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "idPaciente",
+			"value": "1",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "idProfissional",
+			"value": "1",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "dataHoraInicio",
+			"value": "2025-09-03T11:14:28.907Z",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "jwt",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImUwZjhhNGY2LTFhMDItNDM5My05ZGQ5LWIyZDgzOTRlYmQyMyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJ0ZXN0ZUBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0ZXN0ZUBnbWFpbC5jb20iLCJqdGkiOiJhNmE1NDE1OS01ZjJmLTQ1MDEtOGFiYi1jM2E5NWFmNWVkOGEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJVc2VyIiwiZXhwIjoxNzUxNzY0NjQyLCJpc3MiOiJDbHVkZU1lZFN5bmMuQXBpIiwiYXVkIjoiQ2x1ZGVNZWRTeW5jLkNsaWVudHMifQ.kImXcA-4fd5HdpE-Q6PkvHKh5zrpobYyBT8OEYy8aYI",
+			"type": "default",
+			"enabled": true
 		}
-	]
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2025-07-06T01:05:51.446Z",
+	"_postman_exported_using": "Postman/11.52.6"
 }

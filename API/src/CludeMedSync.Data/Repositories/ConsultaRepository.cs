@@ -17,11 +17,37 @@ namespace CludeMedSync.Data.Repositories
 		{
 		}
 
-		public override async Task<IEnumerable<Consulta>> GetAllAsync()
+		public async Task<(Consulta? consulta, Paciente? paciente, Profissional? profissional)> GetByIdComAgregadosAsync(int id)
 		{
 			using var connection = CreateConnection();
-			const string query = $"SELECT * FROM {nameof(Consulta)} WHERE Status <> 'Cancelada'";
-			return await connection.QueryAsync<Consulta>(query);
+			const string query = @$"SELECT 
+									C.*, 
+									P.*, 
+									PR.*
+								FROM {nameof(Consulta)} AS C
+								LEFT JOIN {nameof(Paciente)} AS P ON C.{nameof(Paciente)}Id = P.Id
+								LEFT JOIN {nameof(Profissional)} AS PR ON C.{nameof(Profissional)}Id = PR.Id
+								WHERE C.Id = @Id";
+
+			var resultados = new List<(Consulta, Paciente, Profissional)>();
+
+			await connection.QueryAsync<Consulta, Paciente, Profissional, Consulta>(
+				query,
+				(consulta, paciente, profissional) =>
+				{
+					resultados.Add((consulta, paciente, profissional));
+					return consulta;
+				},
+				new { Id = id },
+				splitOn: "Id,Id"
+			);
+
+			if (resultados.Any())
+			{
+				return resultados.First();
+			}
+
+			return (null, null, null);
 		}
 
 		public async Task<Consulta> GetByRelationShip(string coluna, string valor, EnumTipoAtributo tipo)
@@ -56,17 +82,6 @@ namespace CludeMedSync.Data.Repositories
 			var resultado = await connection.QueryFirstOrDefaultAsync<Consulta>(query, new { Valor = valorConvertido });
 			return resultado;
 		}
-
-
-
-		public override async Task<bool> DeleteAsync(int id)
-		{
-			using var connection = CreateConnection();
-			const string query = $"UPDATE {nameof(Consulta)} SET Status = 'Cancelada' WHERE Id = @Id";
-			var affectedRows = await connection.ExecuteAsync(query, new { Id = id });
-			return affectedRows > 0;
-		}
-
 		public async Task<bool> ExisteConsultaNoMesmoDiaAsync(int pacienteId, int profissionalId, DateTime data)
 		{
 			using var connection = CreateConnection();
@@ -98,5 +113,6 @@ namespace CludeMedSync.Data.Repositories
 			var result = await connection.ExecuteScalarAsync<int?>(query, new { profissionalId, dataHoraInicio, dataHoraFim });
 			return result.HasValue;
 		}
+
 	}
 }

@@ -1,12 +1,13 @@
 using CludeMedSync.Api.Configuration;
+using CludeMedSync.Data.Extensions;
+using Dapper;
+SqlMapper.AddTypeHandler(new EnumStatusConsultaTypeHandler());
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddMvcConfiguration();
-builder.Services.ResolveDependencies();
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfig();
+builder.Services.AddMvcConfiguration();
 builder.Services.AddAuthConfig(builder.Configuration);
+builder.Services.ResolveDependencies();
 
 var app = builder.Build();
 
@@ -17,14 +18,11 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerConfig();
 }
 
-app.UseRequestLocalization();
-
 app.UseHttpsRedirection();
-
-app.UseAuthConfig();
-
+app.UseRequestLocalization();
+app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

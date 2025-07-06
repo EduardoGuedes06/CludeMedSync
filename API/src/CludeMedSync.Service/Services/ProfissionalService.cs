@@ -1,4 +1,5 @@
-﻿using CludeMedSync.Domain.Interfaces;
+﻿using AutoMapper;
+using CludeMedSync.Domain.Interfaces;
 using CludeMedSync.Domain.Models;
 using CludeMedSync.Domain.Models.Utils.Enums;
 using CludeMedSync.Service.Common;
@@ -12,41 +13,31 @@ namespace CludeMedSync.Service.Services
 	{
 		private readonly IProfissionalRepository _profissionalRepository;
 		private readonly IConsultaRepository _consultaRepository;
+		private readonly IMapper _mapper;
+
 
 		public ProfissionalService(
 			IProfissionalRepository profissionalRepository, 
-			IConsultaRepository consultaRepository)
+			IConsultaRepository consultaRepository,
+			IMapper mapper)
 		{
 			_profissionalRepository = profissionalRepository;
 			_consultaRepository = consultaRepository;
+			_mapper = mapper;
 		}
 
 		public async Task<ProfissionalDto?> GetByIdAsync(int id)
 		{
 			var profissional = await _profissionalRepository.GetByIdAsync(id);
-			if (profissional == null) return null;
-
-			return new ProfissionalDto(
-				profissional.Id,
-				profissional.NomeCompleto,
-				profissional.Especialidade,
-				profissional.CRM,
-				profissional.Email,
-				profissional.Telefone
-			);
+			return _mapper.Map<ProfissionalDto>(profissional);
 		}
 
 		public async Task<IEnumerable<ProfissionalDto>> GetAllAsync()
 		{
 			var profissionais = await _profissionalRepository.GetAllAsync();
-			return profissionais.Select(p => new ProfissionalDto(
-				p.Id,
-				p.NomeCompleto,
-				p.Especialidade,
-				p.CRM,
-				p.Email,
-				p.Telefone
-			));
+
+			return _mapper.Map<IEnumerable<ProfissionalDto>>(profissionais);
+
 		}
 
 		public async Task<ResultadoOperacao<ProfissionalDto>> CreateAsync(CreateProfissionalDto profissionalDto)
@@ -60,30 +51,15 @@ namespace CludeMedSync.Service.Services
 			if (existe)
 				return ResultadoOperacao<ProfissionalDto>.Falha(mensagem);
 
-			var profissional = new Profissional
-			{
-				NomeCompleto = profissionalDto.NomeCompleto,
-				Especialidade = profissionalDto.Especialidade,
-				CRM = profissionalDto.CRM,
-				Email = profissionalDto.Email,
-				Telefone = profissionalDto.Telefone
-			};
+			var profissional = _mapper.Map<Profissional>(profissionalDto);
 
 			var novoId = await _profissionalRepository.AddAsync(profissional);
 			profissional.Id = novoId;
 
-			var dto = new ProfissionalDto(
-				profissional.Id,
-				profissional.NomeCompleto,
-				profissional.Especialidade,
-				profissional.CRM,
-				profissional.Email,
-				profissional.Telefone
-			);
+			var dto = _mapper.Map<ProfissionalDto>(profissional);
 
 			return ResultadoOperacao<ProfissionalDto>.Ok("Profissional cadastrado com sucesso.", dto);
 		}
-
 
 		public async Task<bool> UpdateAsync(int id, CreateProfissionalDto profissionalDto)
 		{
@@ -98,6 +74,7 @@ namespace CludeMedSync.Service.Services
 
 			return await _profissionalRepository.UpdateAsync(profissional);
 		}
+
 		public async Task<ResultadoOperacao<object>> DeleteAsync(int id)
 		{
 			var profissional = await _profissionalRepository.GetByIdAsync(id);

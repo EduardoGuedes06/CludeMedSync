@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CludeMedSync.Domain.Entities.Utils.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,11 +16,11 @@ namespace CludeMedSync.Domain.Entities
 		public int ProfissionalId { get; set; }
 		public string NomePaciente { get; set; } = string.Empty;
 		public string NomeProfissional { get; set; } = string.Empty;
-		public string? EspecialidadeProfissional { get; set; }
 		public DateTime DataHoraInicio { get; set; }
 		public DateTime DataHoraFim { get; set; }
 		public string? Motivo { get; set; }
-		public string Status { get; set; } = string.Empty;
+		public string? Observacao { get; set; }
+		public int Status { get; set; }
 		public DateTime DataLog { get; set; }
 	}
 }

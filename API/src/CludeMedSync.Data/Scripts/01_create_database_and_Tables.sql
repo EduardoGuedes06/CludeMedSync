@@ -57,7 +57,8 @@ CREATE TABLE IF NOT EXISTS Consulta (
     DataHoraInicio DATETIME NOT NULL,
     DataHoraFim DATETIME NOT NULL,
     Motivo VARCHAR(500),
-    Status VARCHAR(50) NOT NULL,
+    Observacao VARCHAR(500),
+    Status INT NOT NULL,
     FOREIGN KEY (PacienteId) REFERENCES Paciente(Id),
     FOREIGN KEY (ProfissionalId) REFERENCES Profissional(Id)
 );
@@ -73,7 +74,8 @@ CREATE TABLE IF NOT EXISTS ConsultaLog (
     DataHoraInicio DATETIME NOT NULL,
     DataHoraFim DATETIME NOT NULL,
     Motivo VARCHAR(500),
-    Status VARCHAR(50) NOT NULL,
+    Observacao VARCHAR(500),
+    Status INT NOT NULL,
     DataLog TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

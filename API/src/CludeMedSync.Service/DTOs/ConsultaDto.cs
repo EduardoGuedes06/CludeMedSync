@@ -10,17 +10,23 @@ namespace CludeMedSync.Service.DTOs
 		int PacienteId,
 		int ProfissionalId,
 		DateTime DataHoraInicio,
-		string? Motivo
+		string? Motivo,
+		string? Observacao
+	);
+
+	public record AtualizarConsultaDto(
+		DateTime DataHoraInicio,
+		string? Motivo,
+		string? Observacao
 	);
 
 	public record ConsultaDto(
 		int Id,
 		int PacienteId,
-		string NomePaciente,
 		int ProfissionalId,
-		string NomeProfissional,
 		DateTime DataHoraInicio,
 		DateTime DataHoraFim,
-		string Status
+		string Status,
+		string Observacao
 	);
 }
