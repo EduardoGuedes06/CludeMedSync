@@ -1,0 +1,29 @@
+.badge {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--lilac);
+    color: var(--white);
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-weight: 600;
+}
+
+.teacher-badge { background-color: var(--lilac); }
+
+.series-badge { background-color: var(--petroleum-blue); }
+
+.subject-badge { background-color: #6D28D9; }
+
+.badge.status-approved {
+    background-color: var(--green-status);
+}
+
+.badge.status-pending {
+    background-color: var(--yellow-status);
+    color: var(--dark-text); /* Opcional: melhora o contraste no amarelo */
+}
+
+.badge.status-conflicted {
+    background-color: var(--red-status);
+}

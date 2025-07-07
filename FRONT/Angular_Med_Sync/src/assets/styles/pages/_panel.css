@@ -1,0 +1,228 @@
+.main-content {
+    flex-grow: 1;
+    padding: 24px;
+    margin-left: 0;
+    transition: margin-left 0.3s ease-in-out;
+    width: 100%;
+}
+
+.main-content.expanded {
+    margin-left: 250px;
+}
+
+.content-section {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.content-section.hidden {
+    display: none;
+}
+
+.section-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--petroleum-blue);
+    margin-bottom: 24px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.status-indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+.status-indicator.green { background-color: var(--green-status); }
+
+.status-indicator.yellow { background-color: var(--yellow-status); }
+
+.status-indicator.red { background-color: var(--red-status); }
+
+.progress-bar-container {
+    width: 100%;
+    background-color: var(--light-gray);
+    border-radius: 9999px;
+    height: 16px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: var(--lilac);
+    border-radius: 9999px;
+    transition: width 0.4s ease-out;
+}
+
+.progress-text {
+    font-size: 14px;
+    color: #666;
+    text-align: right;
+}
+
+.calendar-placeholder {
+    height: 256px;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 18px;
+    border: 2px dashed var(--light-gray);
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0 !important;
+    }
+}
+
+.profile-picture-area {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.profile-picture-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.profile-picture-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-picture-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.profile-picture-wrapper:hover .profile-picture-overlay {
+    opacity: 1;
+}
+
+.profile-picture-overlay i {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.cropper-container {
+    width: 100%;
+    height: 400px;
+    background-color: #f0f0f0;
+}
+
+#image-to-crop {
+	display: block;
+	max-width: 100%;
+}
+
+.profile-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.profile-card-header .card-title {
+    margin-bottom: 0;
+}
+
+.profile-card-actions .edit-mode {
+    display: none;
+    gap: 8px;
+}
+
+#personal-data-card.is-editing .profile-card-actions .view-mode {
+    display: none;
+}
+#personal-data-card.is-editing .profile-card-actions .edit-mode {
+    display: flex;
+}
+
+.profile-card-content {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.profile-avatar-container .profile-picture-wrapper {
+    width: 80px;
+    height: 80px;
+}
+.profile-avatar-container .status-ring {
+    width: 90px;
+    height: 90px;
+    top: -5px;
+    left: -5px;
+}
+
+.profile-info-list {
+    flex-grow: 1;
+}
+
+.profile-info-list .info-item {
+    display: flex;
+    flex-direction: column;
+}
+.profile-info-list .info-item:not(:last-child) {
+    margin-bottom: 16px;
+}
+.profile-info-list .info-item span {
+    font-size: 13px;
+    color: var(--light-text);
+}
+.profile-info-list .info-item strong {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.profile-info-list .edit-mode {
+    display: none;
+}
+#personal-data-card.is-editing .profile-info-list .view-mode {
+    display: none;
+}
+#personal-data-card.is-editing .profile-info-list .edit-mode {
+    display: block;
+}
+
+.profile-details-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}

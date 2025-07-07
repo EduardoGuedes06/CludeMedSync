@@ -1,0 +1,77 @@
+.file-uploader {
+    position: relative;
+    border: 2px dashed var(--light-gray);
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.file-uploader:hover,
+.file-uploader.is-dragover {
+    border-color: var(--lilac);
+    background-color: #f8faff;
+}
+
+.file-uploader.is-success {
+    border-color: var(--green-status);
+    border-style: solid;
+}
+
+.file-uploader input[type="file"] {
+    display: none;
+}
+
+.file-uploader-ui .file-icon {
+    font-size: 40px;
+    color: var(--lilac);
+    margin-bottom: 16px;
+}
+
+.file-uploader[data-upload-type="document"] .file-icon::before {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    content: "\f15c";
+}
+
+.file-uploader[data-upload-type="image"] .file-icon::before {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    content: "\f03e";
+}
+
+.file-uploader-ui .main-text {
+    font-weight: 600;
+    color: var(--dark-text);
+}
+
+.file-uploader-ui .sub-text,
+.file-uploader-ui .file-name {
+    font-size: 14px;
+    color: var(--light-text);
+    margin-top: 4px;
+}
+
+.file-uploader .file-preview-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    color: var(--light-text);
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.file-uploader.is-success:hover .file-preview-btn {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.file-uploader .file-preview-btn:hover {
+    color: var(--lilac);
+}

@@ -1,1 +1,29 @@
-/* You can add global styles to this file, and also import other style files */
+@import './assets/styles/base/_variables.css';
+@import './assets/styles/base/_reset.css';
+@import './assets/styles/base/_typography.css';
+
+@import './assets/styles/layout/_navigation.css';
+@import './assets/styles/layout/_grid.css';
+@import './assets/styles/layout/_header.css';
+@import './assets/styles/layout/_sidebar.css';
+
+@import './assets/styles/components/_buttons.css';
+@import './assets/styles/components/_cards.css';
+@import './assets/styles/components/_forms.css';
+@import './assets/styles/components/_modals.css';
+@import './assets/styles/components/_badges.css';
+@import './assets/styles/components/_tables.css';
+@import './assets/styles/components/_pagination.css';
+@import './assets/styles/components/_toast.css';
+@import './assets/styles/components/_settings.css';
+@import './assets/styles/components/_uploader.css';
+@import './assets/styles/components/_instituicao.css';
+@import './assets/styles/components/_detailed-progress.css';
+
+@import './assets/styles/pages/_landing.css';
+@import './assets/styles/pages/_dashboard.css';
+@import './assets/styles/pages/_auth.css';
+@import './assets/styles/pages/_panel.css';
+@import './assets/styles/pages/_instituicoes.css';
+@import './assets/styles/pages/_profile.css';
+@import './assets/styles/pages/error.css';

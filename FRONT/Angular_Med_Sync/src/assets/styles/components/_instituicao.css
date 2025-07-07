@@ -1,0 +1,331 @@
+/* ============================================= */
+/* ESTILOS PARA A PÁGINA DE             */
+/* DETALHES DA INSTITUIÇÃO               */
+/* ============================================= */
+
+/* --- Layout e Estrutura Geral --- */
+
+.institution-page-title {
+    margin-bottom: 8px;
+}
+
+.institution-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+.institution-main-column,
+.institution-sidebar-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* --- Card de Informações Gerais --- */
+
+.info-card {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+.info-card-logo-wrapper {
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.info-card-logo {
+    border-radius: 8px;
+    border: 3px solid var(--light-gray);
+}
+
+.info-card-details {
+    flex-grow: 1;
+}
+
+.info-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.info-card-header .card-title {
+    margin: 0;
+}
+
+.info-card-cnpj {
+    color: var(--light-text);
+    font-size: 14px;
+    margin-top: -8px;
+    margin-bottom: 16px;
+}
+
+.info-card-contact-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 15px;
+}
+
+.info-card-contact-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.info-card-contact-list i {
+    color: var(--lilac);
+    width: 20px;
+}
+
+/* --- Card de Progresso do Cadastro --- */
+
+.progress-card.complete {
+    text-align: center;
+    background-color: var(--green-status-light-bg);
+    border: 1px solid var(--green-status);
+}
+
+.progress-card.complete .fas.fa-check-circle {
+    font-size: 40px;
+    color: var(--green-status);
+    margin-bottom: 12px;
+}
+
+.progress-card.complete .card-title {
+    color: var(--green-status-dark-text);
+}
+
+.progress-card.complete .section-subtitle {
+    margin-top: -12px;
+    margin-bottom: 20px;
+    color: var(--green-status-dark-text);
+}
+
+.progress-card .progress-text {
+    text-align: right;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.progress-card .pending-items-title {
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.progress-card .pending-items-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 15px;
+    margin-bottom: 24px;
+}
+
+.progress-card .pending-items-list i {
+    color: var(--yellow-status);
+}
+
+.card-actions-center {
+    border: none;
+    padding: 0;
+    margin: 0;
+    justify-content: center;
+    display: flex;
+}
+
+/* --- Card de Status do Planejamento --- */
+
+.status-card .status-card-version {
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+
+.status-card.finalized .status-card-highlight {
+    background-color: var(--off-white-bg);
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.status-card.finalized .status-card-highlight p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--light-text);
+}
+
+.status-card.finalized .finalized-date {
+    margin: 4px 0 0;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--dark-text);
+}
+
+.status-card .progress-bar-fill.warning {
+    background-color: var(--yellow-status);
+}
+
+/* --- Card de Atividade e Responsáveis --- */
+.activity-card-subtitle {
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.responsible-admin-block {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: var(--off-white-bg);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.responsible-admin-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    /* Pedido específico: borda com a cor principal */
+    border: 3px solid var(--petroleum-blue);
+}
+
+.admin-name {
+    font-weight: 600;
+    margin: 0;
+}
+
+.admin-member-since {
+    font-size: 14px;
+    color: var(--light-text);
+    margin: 0;
+}
+
+.activity-log-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.activity-log-item {
+    display: flex;
+    gap: 12px;
+    font-size: 14px;
+}
+
+.activity-log-item i {
+    font-size: 16px;
+    margin-top: 2px;
+}
+
+.activity-log-item strong {
+    color: var(--petroleum-blue);
+}
+
+.log-timestamp {
+    display: block;
+    color: var(--light-text);
+    font-size: 12px;
+}
+
+.log-icon-success { color: var(--green-status); }
+.log-icon-info { color: var(--lilac); }
+.log-icon-default { color: var(--dark-text); }
+
+
+/* --- Card do Mapa Visual da Estrutura --- */
+.structure-card .section-header {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--light-gray);
+}
+.structure-map {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.structure-level-item {
+    background: var(--off-white-bg);
+    padding: 16px;
+    border-radius: 8px;
+    border-left: 4px solid var(--petroleum-blue);
+}
+.structure-level-item .level-title {
+    font-weight: 600;
+    color: var(--petroleum-blue);
+}
+.structure-level-item-nested {
+    margin-top: 12px;
+    background: var(--white);
+    padding: 12px;
+    border-radius: 6px;
+    border-left: 4px solid var(--lilac);
+}
+.nested-title {
+    font-weight: 500;
+}
+.nested-details {
+    font-size: 14px;
+    color: var(--light-text);
+    margin-top: 8px;
+}
+
+
+/* --- Seção de Indicadores Resumidos --- */
+.indicators-header {
+    margin-top: 32px;
+}
+
+.indicators-header .section-title {
+    font-size: 24px;
+    margin: 0;
+}
+
+.indicators-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.indicator-card {
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.indicator-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.indicator-card i {
+    font-size: 28px;
+    color: var(--lilac);
+}
+
+.indicator-card .indicator-value {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--petroleum-blue);
+    margin: 8px 0;
+}
+
+.indicator-card .indicator-label {
+    color: var(--dark-text);
+    font-weight: 500;
+    margin: 0;
+}
+
+
+/* --- Media Query para Responsividade --- */
+@media (max-width: 992px) {
+    .institution-grid {
+        grid-template-columns: 1fr;
+    }
+}

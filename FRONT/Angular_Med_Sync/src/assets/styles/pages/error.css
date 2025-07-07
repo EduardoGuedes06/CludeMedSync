@@ -1,0 +1,135 @@
+/* ======================================================= */
+/* ESTILOS PARA PÁGINA DE ERRO COM TEMA "FGV AI" (500)      */
+/* ======================================================= */
+
+/* Altera o fundo padrão do body para um tom mais escuro */
+body.bg-dark {
+    background-color: #111827; /* Um cinza quase preto, para o tema tech */
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+}
+
+.error-page-wrapper-ai {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    font-family: var(--font-family);
+}
+
+.error-content-box-ai {
+    width: 100%;
+    max-width: 800px;
+    padding: 40px;
+    border-radius: 12px;
+    background-color: rgba(31, 41, 55, 0.8); /* Card com fundo escuro e transparente */
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.error-grid-ai {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Coluna do SVG menor que a do texto */
+    align-items: center;
+    gap: 40px;
+}
+
+.error-svg-container-ai {
+    /* Efeito de brilho sutil no SVG */
+    filter: drop-shadow(0 0 15px var(--lilac));
+}
+
+.error-svg-container-ai svg,
+.error-svg-container-ai img {
+    width: 100%;
+    height: auto;
+}
+
+.error-title-ai {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 16px;
+}
+
+.error-title-ai::after {
+    content: '_';
+    animation: blink 1s step-end infinite; /* Animação de cursor piscando */
+    font-weight: 500;
+    margin-left: 5px;
+    color: var(--green-status);
+}
+
+.error-message-ai {
+    font-size: 16px;
+    color: var(--light-gray);
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+
+.error-status-ai {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: rgba(0,0,0,0.2);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.error-status-ai > span:first-child {
+    color: var(--light-gray);
+    font-weight: 500;
+}
+
+.status-badge-ai {
+    color: var(--yellow-status);
+    font-weight: 600;
+}
+
+/* Animação do cursor */
+@keyframes blink {
+    from, to { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .error-grid-ai {
+        grid-template-columns: 1fr; /* Empilha as colunas */
+        text-align: center;
+    }
+    .error-svg-container-ai {
+        max-width: 180px;
+        margin: 0 auto 32px auto;
+    }
+    .error-status-ai {
+        justify-content: center;
+    }
+}
+.error-image-ai {
+    width: 100%;
+    height: auto;
+    animation: pulse 2.5s infinite ease-in-out; /* Aumentei o tempo para um efeito mais sutil */
+}
+
+/* Define a animação */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.4));
+    }
+    50% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.7));
+    }
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.4));
+    }
+}

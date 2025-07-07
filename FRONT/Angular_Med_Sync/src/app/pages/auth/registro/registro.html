@@ -1,0 +1,43 @@
+<div class="auth-wrapper">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <a routerLink="/"><i class="fas fa-clock"></i></a>
+      <h1>MedSync</h1>
+    </div>
+
+    <h3 class="auth-title">Crie sua conta</h3>
+
+    <form [formGroup]="registroForm" (ngSubmit)="registrar()">
+
+      <div class="form-group">
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" formControlName="nome" />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Endereço de e-mail</label>
+        <input type="email" id="email" formControlName="email" />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Crie uma senha</label>
+        <input type="password" id="password" formControlName="password" />
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirme a senha</label>
+        <input type="password" id="confirmPassword" formControlName="confirmPassword" />
+      </div>
+
+      <div *ngIf="registroForm.errors?.['passwordsMismatch']" class="validation-error">
+        As senhas não coincidem.
+      </div>
+
+      <div class="auth-actions">
+        <button type="submit" class="btn primary-btn">Registrar</button>
+      </div>
+    </form>
+
+    <p class="auth-switch">Já possui uma conta? <a routerLink="/auth/login">Faça login</a></p>
+  </div>
+</div>

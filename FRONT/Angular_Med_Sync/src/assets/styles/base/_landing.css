@@ -1,0 +1,17 @@
+body.landing-page {
+    background-color: var(--petroleum-blue);
+    color: var(--white);
+    text-align: center;
+}
+
+.background-overlay {
+    /* ... */
+}
+
+.welcome-section {
+    /* ... */
+}
+
+.features-section {
+    /* ... */
+}

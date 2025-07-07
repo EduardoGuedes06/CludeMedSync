@@ -1,0 +1,12 @@
+:root {
+    --petroleum-blue: #1E3A8A;
+    --lilac: #A78BFA;
+    --light-gray: #E5E7EB;
+    --white: #FFFFFF;
+    --green-status: #22C55E;
+    --yellow-status: #F59E0B;
+    --red-status: #EF4444;
+    --dark-text: #1F2937;
+    --light-text: #6B7280;
+    --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+}

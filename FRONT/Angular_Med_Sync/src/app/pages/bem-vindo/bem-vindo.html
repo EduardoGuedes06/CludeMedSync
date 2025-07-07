@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="landing-page">
+<div class="background-overlay"></div>
+
+<nav class="landing-nav">
+  <div class="nav-container">
+    <div class="nav-logo">
+      <i class="fas fa-clock"></i> MedSync
+    </div>
+    <a routerLink="/login" class="btn primary-btn">Acessar Plataforma</a>
+  </div>
+</nav>
+
+<main class="landing-container">
+  <section class="welcome-section">
+    <h1 class="welcome-title">Agendamento Inteligente para Clínicas Médicas</h1>
+    <p class="welcome-subtitle">Organize suas consultas com eficiência e segurança, com o sistema MedSync.</p>
+    <div class="cta-group">
+      <a routerLink="/login" class="cta-button primary">Comece a Agendar</a>
+      <a href="#features" class="cta-button secondary">Conheça os Recursos</a>
+    </div>
+  </section>
+
+  <section id="features" class="features-section">
+    <h2 class="section-title-light">Recursos Principais</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <i class="fas fa-user-md feature-icon"></i>
+        <h3>Agendamentos por Especialidade</h3>
+        <p>Permite agendar com o profissional certo no horário disponível.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-calendar-check feature-icon"></i>
+        <h3>Verificação de Conflitos</h3>
+        <p>Garante que não existam dois agendamentos no mesmo horário.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-lock feature-icon"></i>
+        <h3>Autenticação Segura</h3>
+        <p>Login via JWT para proteger os dados de pacientes e médicos.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="landing-footer">
+  <p>&copy; 2025 MedSync. Todos os direitos reservados.</p>
+</footer>
+</body>
+</html>

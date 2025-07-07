@@ -34,7 +34,7 @@ namespace CludeMedSync.Api.Controllers
 			var result = await _authService.RegisterAsync(registerDto);
 			if (!result.Sucesso)
 			{
-				return BadRequest(result);
+				return Ok(result);
 			}
 			return Ok(result);
 		}
@@ -53,7 +53,7 @@ namespace CludeMedSync.Api.Controllers
 			var result = await _authService.LoginAsync(loginDto);
 			if (!result.Sucesso)
 			{
-				return Unauthorized(result);
+				return Ok(result);
 			}
 			return Ok(result);
 		}

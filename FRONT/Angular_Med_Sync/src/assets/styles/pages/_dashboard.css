@@ -1,0 +1,273 @@
+.dashboard-header {
+	display: flex !important;
+	justify-content: space-between !important;
+	align-items: center !important;
+	flex-wrap: wrap !important;
+	gap: 16px !important;
+	margin-bottom: 24px !important;
+}
+
+.header-date {
+	font-size: 14px !important;
+	font-weight: 500 !important;
+	color: var(--light-text) !important;
+	background-color: var(--white) !important;
+	padding: 8px 16px !important;
+	border-radius: 99px !important;
+}
+
+.kpi-grid {
+	display: grid !important;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+	gap: 24px !important;
+	margin-bottom: 32px !important;
+}
+
+.kpi-card {
+	position: relative !important;
+	display: flex !important;
+	align-items: center !important;
+	gap: 16px !important;
+	padding: 20px !important;
+	overflow: hidden !important;
+}
+
+	.kpi-card .kpi-icon {
+		font-size: 28px !important;
+		color: var(--petroleum-blue) !important;
+	}
+
+	.kpi-card.kpi-success .kpi-icon {
+		color: var(--green-status) !important;
+	}
+
+	.kpi-card.kpi-danger .kpi-icon {
+		color: var(--red-status) !important;
+	}
+
+.kpi-content {
+	display: flex !important;
+	flex-direction: column !important;
+}
+
+.kpi-value {
+	font-size: 28px !important;
+	font-weight: 700 !important;
+	color: var(--dark-text) !important;
+	line-height: 1.2 !important;
+}
+
+.kpi-label {
+	font-size: 14px !important;
+	color: var(--light-text) !important;
+}
+
+.kpi-action {
+	position: absolute !important;
+	bottom: 0 !important;
+	right: 0 !important;
+	background-color: rgba(0, 0, 0, 0.05) !important;
+	padding: 4px 12px !important;
+	font-size: 12px !important;
+	font-weight: 600 !important;
+	text-decoration: none !important;
+	color: var(--dark-text) !important;
+	border-top-left-radius: 8px !important;
+	transition: background-color 0.2s !important;
+}
+
+.kpi-danger .kpi-action {
+	color: var(--red-status) !important;
+}
+
+.kpi-card:hover .kpi-action {
+	background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.dashboard-main-content {
+	display: grid !important;
+	grid-template-columns: 2fr 1fr !important;
+	gap: 24px !important;
+	align-items: flex-start !important;
+}
+
+.alerts-column {
+	display: flex !important;
+	flex-direction: column !important;
+	gap: 24px !important;
+}
+
+.alert-item {
+	display: flex !important;
+	align-items: flex-start !important;
+	gap: 16px !important;
+}
+
+	.alert-item:not(:last-child) {
+		margin-bottom: 16px !important;
+		padding-bottom: 16px !important;
+		border-bottom: 1px solid var(--light-gray) !important;
+	}
+
+.alert-icon {
+	font-size: 20px !important;
+	flex-shrink: 0 !important;
+	width: 40px !important;
+	height: 40px !important;
+	border-radius: 50% !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+	.alert-icon.alert-warning {
+		background-color: rgba(245, 158, 11, 0.1) !important;
+		color: var(--yellow-status) !important;
+	}
+
+	.alert-icon.alert-danger {
+		background-color: rgba(239, 68, 68, 0.1) !important;
+		color: var(--red-status) !important;
+	}
+
+	.alert-icon.alert-info {
+		background-color: rgba(30, 58, 138, 0.1) !important;
+		color: var(--petroleum-blue) !important;
+	}
+
+.alert-content strong {
+	font-weight: 600 !important;
+	color: var(--dark-text) !important;
+	display: block !important;
+	margin-bottom: 2px !important;
+}
+
+.alert-content span {
+	font-size: 14px !important;
+	color: var(--light-text) !important;
+}
+
+.recent-activity-section {
+	margin-top: 32px !important;
+}
+
+.detailed-progress-card {
+	background-color: var(--white) !important;
+	border: 1px solid var(--light-gray) !important;
+	border-left: 4px solid var(--petroleum-blue) !important;
+	padding: 24px !important;
+	transition: box-shadow 0.3s ease !important;
+}
+
+	.detailed-progress-card:hover {
+		box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07) !important;
+	}
+
+	.detailed-progress-card .card-title {
+		color: var(--petroleum-blue) !important;
+		font-size: 18px !important;
+	}
+
+	.detailed-progress-card .section-subtitle {
+		font-size: 14px !important;
+		color: var(--light-text) !important;
+	}
+
+.progress-checklist {
+	list-style: none !important;
+	padding: 0 !important;
+	margin: 24px 0 !important;
+	display: flex !important;
+	flex-direction: column !important;
+	position: relative !important;
+}
+
+	.progress-checklist::before {
+		content: '' !important;
+		position: absolute !important;
+		top: 12px !important;
+		left: 12px;
+		width: 2px !important;
+		height: calc(100% - 24px) !important;
+		background-color: var(--white) !important;
+		z-index: 1 !important;
+	}
+
+.checklist-item {
+	display: flex !important;
+	align-items: flex-start !important;
+	gap: 16px !important;
+	position: relative !important;
+	padding: 12px 0 !important;
+}
+
+	.checklist-item .item-icon {
+		font-size: 20px !important;
+		z-index: 2 !important;
+		background-color: var(--white) !important;
+		padding-right: 12px !important;
+		width: 36px !important;
+		text-align: center !important;
+	}
+
+	.checklist-item.status-complete .item-icon {
+		color: var(--green-status) !important;
+	}
+
+	.checklist-item.status-pending .item-icon {
+		color: var(--yellow-status) !important;
+	}
+
+	.checklist-item.status-danger .item-icon {
+		color: var(--red-status) !important;
+	}
+
+	.checklist-item.status-incomplete .item-icon {
+		color: var(--light-text) !important;
+	}
+
+	.checklist-item .item-content {
+		flex-grow: 1 !important;
+	}
+
+		.checklist-item .item-content h4 {
+			font-size: 16px !important;
+			font-weight: 600 !important;
+			color: var(--dark-text) !important;
+			margin-bottom: 4px !important;
+		}
+
+	.checklist-item .progress-bar-container.mini {
+		height: 6px !important;
+		border-radius: 6px !important;
+		background-color: var(--white);
+		margin-top: 4px !important;
+	}
+
+	.checklist-item .progress-bar-container.mini .progress-bar-fill {
+		background-image: linear-gradient(45deg, var(--lilac), var(--petroleum-blue)) !important;
+	}
+
+	.checklist-item .item-action {
+		margin-left: auto !important;
+		flex-shrink: 0 !important;
+	}
+
+.card-footer-progress {
+	margin-top: 16px !important;
+	padding-top: 16px !important;
+	border-top: 1px solid var(--light-gray) !important;
+}
+
+	.card-footer-progress .btn {
+		width: 100% !important;
+		margin-top: 16px !important;
+		padding: 12px !important;
+		font-size: 16px !important;
+	}
+
+@media (max-width: 992px) {
+	.dashboard-main-content {
+		grid-template-columns: 1fr !important;
+	}
+}

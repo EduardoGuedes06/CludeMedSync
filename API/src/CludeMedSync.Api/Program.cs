@@ -9,6 +9,16 @@ builder.Services.AddMvcConfiguration();
 builder.Services.AddAuthConfig(builder.Configuration);
 builder.Services.ResolveDependencies();
 
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("CorsPolicy", policy =>
+	{
+		policy.AllowAnyOrigin()
+			  .AllowAnyHeader()
+			  .AllowAnyMethod();
+	});
+});
+
 var app = builder.Build();
 
 app.UseGlobalExceptionHandler();
@@ -23,6 +33,7 @@ app.UseRequestLocalization();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors("CorsPolicy");
 app.MapControllers();
 
 app.Run();

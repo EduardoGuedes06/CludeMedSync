@@ -1,0 +1,176 @@
+/* Adicione este bloco ao seu CSS */
+
+/* Estiliza a grade que conterá os cartões de configuração */
+.settings-grid {
+    display: grid;
+    /* Cria colunas responsivas: no mínimo 350px, preenchendo o espaço */
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 24px; /* Espaçamento entre os cartões */
+}
+
+/* Estiliza cada cartão de configuração individualmente */
+.setting-card {
+    display: flex; /* Alinha o ícone, texto e botão na horizontal */
+    align-items: flex-start; /* Alinha os itens no topo */
+    gap: 16px; /* Espaço entre ícone, texto e botão */
+}
+
+/* Estiliza o ícone dentro do cartão */
+.setting-card-icon {
+    font-size: 24px;
+    /* Usa a variável de cor que você já tem, garantindo consistência */
+    color: var(--petroleum-blue); 
+    padding-top: 8px; /* Pequeno ajuste para alinhar verticalmente com o título */
+}
+
+/* Estiliza a área de conteúdo (título e parágrafo) */
+.setting-card-content {
+    flex-grow: 1; /* Faz esta área ocupar o máximo de espaço possível */
+}
+
+/* Remove margens padrão do título e parágrafo dentro do cartão */
+.setting-card-content h3 {
+    margin-top: 0;
+    margin-bottom: 4px;
+}
+
+.setting-card-content p {
+    font-size: 0.9rem;
+    color: #6c757d; /* Um cinza para o texto descritivo */
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+
+/* Estilo para o subtítulo da seção */
+.section-subtitle {
+    color: #6c757d;
+}
+
+/* Estilos para os checkboxes nos modais */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+}
+/* Adicionar em _settings.css */
+
+.modal-tabs {
+    display: flex;
+    gap: 24px;
+    border-bottom: 1px solid var(--light-gray);
+    margin-bottom: 24px;
+    margin-top: -16px;
+}
+
+.modal-tab-link {
+    padding: 10px 4px;
+    border-bottom: 3px solid transparent;
+    color: var(--light-text);
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.modal-tab-link:hover {
+    color: var(--dark-text);
+}
+
+.modal-tab-link.active {
+    color: var(--petroleum-blue);
+    border-bottom-color: var(--petroleum-blue);
+    font-weight: 600;
+}
+
+.modal-tab-content {
+    display: none;
+}
+
+.modal-tab-content.active {
+    display: block;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.theme-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.theme-card {
+    border: 2px solid var(--light-gray);
+    border-radius: 8px;
+    padding: 16px;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+}
+
+.theme-card:hover {
+    border-color: var(--lilac);
+}
+
+.theme-card.active-theme {
+    border-color: var(--petroleum-blue);
+    box-shadow: 0 0 0 3px var(--petroleum-blue);
+}
+
+.theme-card h4 {
+    margin: 12px 0 0;
+    color: var(--dark-text);
+    font-weight: 500;
+}
+
+.theme-preview {
+    display: flex;
+    height: 40px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.theme-preview span {
+    flex: 1;
+}
+
+.color-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 24px;
+}
+
+.color-picker-grid .form-group input[type="color"] {
+    width: 100%;
+    height: 48px;
+    padding: 4px;
+    border: 1px solid var(--light-gray);
+    border-radius: 8px;
+    background-color: var(--white);
+}
+
+/* Layout para os toggles na página de configurações */
+
+.settings-boolean-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 16px 24px;
+    margin-top: 24px;
+}
+
+.toggle-switch-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9fafb;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--light-gray);
+}
+
+.toggle-switch-group label {
+    font-weight: 500;
+    color: var(--dark-text);
+    flex-grow: 1;
+    margin-bottom: 0;
+    cursor: pointer;
+    padding-right: 16px;
+}

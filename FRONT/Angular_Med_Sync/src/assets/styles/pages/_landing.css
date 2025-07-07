@@ -1,0 +1,80 @@
+body.landing-page {
+    background-color: var(--petroleum-blue);
+    color: var(--white);
+    text-align: center;
+}
+
+.background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(30, 58, 138, 0.9) 0%, rgba(30, 58, 138, 0.7) 100%), 
+                url('https://images.unsplash.com/photo-1580582932707-520aed937c7b?q=80&w=1932&auto=format&fit=crop') no-repeat center center/cover;
+    z-index: -1;
+}
+
+.welcome-section {
+    padding: 80px 0;
+}
+
+.welcome-title {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 24px;
+}
+
+.welcome-subtitle {
+    font-size: 20px;
+    font-weight: 300;
+    max-width: 700px;
+    margin: 0 auto 40px;
+    opacity: 0.9;
+}
+
+.cta-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.features-section {
+    padding: 80px 0;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+}
+
+.section-title-light {
+    font-size: 36px;
+    font-weight: 600;
+    margin-bottom: 60px;
+}
+
+.landing-footer {
+    padding: 20px;
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+    .landing-nav {
+        padding: 15px;
+    }
+    .welcome-title {
+        font-size: 36px;
+    }
+    .welcome-subtitle {
+        font-size: 16px;
+    }
+    .cta-group {
+        flex-direction: column;
+    }
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+    .form-grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
