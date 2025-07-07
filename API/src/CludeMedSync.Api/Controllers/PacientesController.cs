@@ -38,6 +38,7 @@ namespace CludeMedSync.Api.Controllers
 			return Ok(pacientes);
 		}
 
+
 		/// <summary>
 		/// Retorna os dados de um paciente específico.
 		/// </summary>

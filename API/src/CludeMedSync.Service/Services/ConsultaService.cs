@@ -39,6 +39,12 @@ namespace CludeMedSync.Service.Services
 			return _mapper.Map<IEnumerable<ConsultaDto>>(consultas);
 		}
 
+		public async Task<IEnumerable<ConsultaLogDto>> GetAlllogsAsync()
+		{
+			var historicoConsultas = await _consultaLogRepository.GetAllAsync();
+			return _mapper.Map<IEnumerable<ConsultaLogDto>>(historicoConsultas);
+		}
+
 		public async Task<ConsultaDto?> GetByIdAsync(int id)
 		{
 			var (consulta, paciente, profissional) = await _consultaRepository.GetByIdComAgregadosAsync(id);

@@ -14,5 +14,6 @@ namespace CludeMedSync.Service.Interfaces
 		Task<ResultadoOperacao<object>> FinalizarAsync(int id, Guid usuarioId);
 		Task<ResultadoOperacao<object>> MarcarComoPacienteNaoCompareceuAsync(int id, Guid usuarioId);
 		Task<ResultadoOperacao<object>> MarcarComoProfissionalNaoCompareceuAsync(int id, Guid usuarioId);
+		Task<IEnumerable<ConsultaLogDto>> GetAlllogsAsync();
 	}
 }

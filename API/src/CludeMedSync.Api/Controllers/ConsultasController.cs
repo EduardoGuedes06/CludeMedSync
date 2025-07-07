@@ -32,13 +32,27 @@ namespace CludeMedSync.Api.Controllers
 		/// <response code="404"></response>
 		/// <response code="500">Erro interno</response>
 		[HttpGet]
-		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(IEnumerable<ConsultaDto>), StatusCodes.Status200OK)]
 		public async Task<IActionResult> GetAll()
 		{
 			var consultas = await _consultaService.GetAllAsync();
 			return Ok(consultas);
 		}
 
+		/// <summary>
+		/// Retorna todo o historico de consultas.
+		/// </summary>
+		/// <returns>Lista de consultas.</returns>
+		/// <response code="200">Retorna a lista de consultas</response>
+		/// <response code="404"></response>
+		/// <response code="500">Erro interno</response>
+		[HttpGet("log")]
+		[ProducesResponseType(typeof(IEnumerable<ConsultaLogDto>), StatusCodes.Status200OK)]
+		public async Task<IActionResult> GetAllLog()
+		{
+			var consultas = await _consultaService.GetAlllogsAsync();
+			return Ok(consultas);
+		}
 		/// <summary>
 		/// Retorna uma consulta específica pelo ID.
 		/// </summary>
