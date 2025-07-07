@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators, FormGroup, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, FormGroup, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 
 import { AuthService } from '../../../services/auth';
-import { User } from '../../../models/user.model';
-import { UserValidators } from '../../../validations/user.validations';
+import { UserValidators } from '../../../validations/modelsValidations/user.validations';
+import { attachValidationHandlers } from '../../../validations/inputValidations/formValidators';
 
 @Component({
   selector: 'app-registro',
@@ -14,7 +14,7 @@ import { UserValidators } from '../../../validations/user.validations';
   templateUrl: './registro.html',
   styleUrls: ['./registro.css']
 })
-export class Registro {
+export class Registro implements AfterViewInit {
   registroForm: FormGroup;
 
   constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {
@@ -30,8 +30,12 @@ export class Registro {
     }, { validators: Registro.passwordMatchValidator });
   }
 
+  ngAfterViewInit() {
+    attachValidationHandlers();
+  }
+
   static passwordMatchValidator: ValidatorFn = (form: AbstractControl): ValidationErrors | null => {
-    const senha = form.get('senha')?.value;
+    const senha = form.get('password')?.value;
     const confirmPassword = form.get('confirmPassword')?.value;
     if (senha && confirmPassword && senha !== confirmPassword) {
       return { passwordsMismatch: true };
@@ -40,7 +44,6 @@ export class Registro {
   };
 
   registrar() {
-    debugger
     if (this.registroForm.invalid) {
       this.registroForm.markAllAsTouched();
       const errorMessage = UserValidators.getFormValidationMessage(this.registroForm);
@@ -52,8 +55,7 @@ export class Registro {
       return;
     }
 
-    const { nome, email, password, confirmPassword } = this.registroForm.value as User;
-    debugger
+    const { nome, email, password, confirmPassword } = this.registroForm.value;
     this.auth.register(nome, email, password, confirmPassword).subscribe({
       next: () => {
         (window as any).showToast('Registro realizado com sucesso!', 'success');

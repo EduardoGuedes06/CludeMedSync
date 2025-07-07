@@ -11,28 +11,23 @@
 
       <div class="form-group">
         <label for="nome">Nome completo</label>
-        <input type="text" id="nome" formControlName="nome" />
+        <input type="text" id="nome" formControlName="nome" data-validate="nome" />
       </div>
-
       <div class="form-group">
         <label for="email">Endereço de e-mail</label>
-        <input type="email" id="email" formControlName="email" />
+        <input type="email" id="email" formControlName="email" data-validate="email" />
       </div>
-
       <div class="form-group">
         <label for="password">Crie uma senha</label>
-        <input type="password" id="password" formControlName="password" />
+        <input type="password" id="password" formControlName="password" data-validate="password" />
       </div>
-
       <div class="form-group">
         <label for="confirmPassword">Confirme a senha</label>
-        <input type="password" id="confirmPassword" formControlName="confirmPassword" />
+        <input type="password" id="confirmPassword" formControlName="confirmPassword" data-validate="confirmPassword" />
       </div>
-
       <div *ngIf="registroForm.errors?.['passwordsMismatch']" class="validation-error">
         As senhas não coincidem.
       </div>
-
       <div class="auth-actions">
         <button type="submit" class="btn primary-btn">Registrar</button>
       </div>

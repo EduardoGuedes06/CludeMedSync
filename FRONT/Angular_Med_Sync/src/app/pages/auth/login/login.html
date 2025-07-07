@@ -8,14 +8,15 @@
     <h3 class="auth-title">Acesse sua conta</h3>
 
     <form [formGroup]="loginForm" (ngSubmit)="login()">
+      
       <div class="form-group">
         <label for="email">Endereço de e-mail</label>
-        <input type="email" id="email" formControlName="email" />
+        <input type="email" id="email" formControlName="email" data-validate="email" />
       </div>
 
       <div class="form-group">
         <label for="password">Sua senha</label>
-        <input type="password" id="password" formControlName="password" />
+        <input type="password" id="password" formControlName="password" data-validate="password" />
       </div>
 
       <div class="form-options">

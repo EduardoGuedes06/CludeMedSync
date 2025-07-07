@@ -1,9 +1,12 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router'; 
-import { provideHttpClient, HTTP_INTERCEPTORS } from '@angular/common/http'; // importou provideHttpClient
+import { provideHttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { App } from './app/app';
 import { routes } from './app/app.routes';
 import { JwtInterceptor } from './app/services/jwt.interceptor';
+import { attachValidationHandlers } from '../src/app/validations/inputValidations/formValidators';
+
+attachValidationHandlers();
 
 bootstrapApplication(App, {
   providers: [

@@ -5,7 +5,8 @@ import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 
 import { AuthService } from '../../../services/auth';
 import { User } from '../../../models/user.model';
-import { UserValidators } from '../../../validations/user.validations';
+import { UserValidators } from '../../../validations/modelsValidations/user.validations';
+import { attachValidationHandlers } from '../../../validations/inputValidations/formValidators';
 
 @Component({
   selector: 'app-login',
@@ -39,7 +40,9 @@ export class Login {
       }
     });
   }
-
+  ngAfterViewInit() {
+    attachValidationHandlers();
+  }
   login() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
