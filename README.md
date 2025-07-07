@@ -119,8 +119,8 @@ docker-compose up --build
 
 ## 📄 Subdocumentações
 
-- [`/API/README.backend.md`](API/README.backend.md) - Documentação técnica da API (.NET)
-- [`/FRONT/README.frontend.md`](FRONT/README.frontend.md) - Documentação técnica do React App
+- [`/API/README.md`](API/README.md) - Documentação técnica da API (.NET)
+- [`/FRONT/README.md`](FRONT/README.md) - Documentação técnica do React App
 - [`/scripts/db-init.sql`](API/src/CludeMedSync.Data/Scripts/01_create_database_and_Tables.sql) - Scripts de criação e seed do banco de dados
 
 ---
