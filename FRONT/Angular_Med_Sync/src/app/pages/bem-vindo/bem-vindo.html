@@ -16,7 +16,7 @@
     <div class="nav-logo">
       <i class="fas fa-clock"></i> MedSync
     </div>
-    <a routerLink="/login" class="btn primary-btn">Acessar Plataforma</a>
+    <a class="btn primary-btn" (click)="acessarPlataforma(); $event.preventDefault()">Acessar Plataforma</a>
   </div>
 </nav>
 
@@ -25,8 +25,8 @@
     <h1 class="welcome-title">Agendamento Inteligente para Clínicas Médicas</h1>
     <p class="welcome-subtitle">Organize suas consultas com eficiência e segurança, com o sistema MedSync.</p>
     <div class="cta-group">
-      <a routerLink="/login" class="cta-button primary">Comece a Agendar</a>
-      <a href="#features" class="cta-button secondary">Conheça os Recursos</a>
+      <a href="#" class="cta-button primary" (click)="acessarPlataforma(); $event.preventDefault()">Comece a Agendar</a>
+      <a class="cta-button secondary">Conheça os Recursos</a>
     </div>
   </section>
 

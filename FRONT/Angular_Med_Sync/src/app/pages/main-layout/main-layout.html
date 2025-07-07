@@ -1,1 +1,60 @@
-<p>main-layout works!</p>
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Time - Painel de Controle</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+</head>
+
+<body>
+    <div class="container">
+    <aside class="sidebar" [class.active]="sidebarActive">
+    <h1 class="logo">Health Time</h1>
+
+    <div class="sidebar-user-profile">
+        <div class="sidebar-user-avatar"></div>
+        <div class="user-details">
+        <span class="user-name">example</span>
+        <span class="user-role">example</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <ul>
+        <li *ngFor="let section of sections">
+            <a
+            [routerLink]="section.route"
+            routerLinkActive="active"
+            [class.active]="currentSectionId === section.id"
+            (click)="showSection(section.id)"
+            href="javascript:void(0);"
+            >
+            <i [class]="section.icon"></i> {{ section.label }}
+            </a>
+        </li>
+        </ul>
+    </nav>
+
+    <a href="#" class="btn danger-btn" style="width: 100%; margin-top: 24px;" (click)="logout($event)">
+    <i class="fas fa-sign-out-alt"></i> Sair
+    </a>
+
+    </aside>
+    <div class="main-content" [class.expanded]="sidebarActive">
+    <header class="mobile-header">
+        <button (click)="toggleSidebar()" class="sidebar-toggle-btn">
+        <i class="fas fa-bars"></i>
+        </button>
+        <h2 class="mobile-header-title">Health Time</h2>
+    </header>
+    <router-outlet></router-outlet>
+    </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+</body>
+
+</html>

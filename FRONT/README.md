@@ -1,50 +1,48 @@
 
-# 💻 MedSync - Frontend (React + Vite + TypeScript)
+# 💻 MedSync - Frontend (Angular 17 + TypeScript)
 
-Este é o frontend da aplicação **MedSync**, desenvolvido com **React 19**, **TypeScript**, **Vite** e **TailwindCSS**. Ele consome a API RESTful do backend .NET e oferece uma interface amigável para agendamento e gerenciamento de consultas.
+Este é o frontend da aplicação **MedSync**, desenvolvido com **Angular 17**, **TypeScript**, e **TailwindCSS**. Ele consome a API RESTful do backend .NET e oferece uma interface moderna e responsiva para agendamento e gerenciamento de consultas.
 
 ---
 
 ## 🧰 Tecnologias Utilizadas
 
-- React 19 com TypeScript
-- Vite (build tool)
-- React Router DOM v6
-- TailwindCSS + Lucide Icons
-- Axios para chamadas HTTP
-- React Hook Form + Zod (validação)
-- Radix UI Dialog (modais)
-- ESLint para padronização de código
+- Angular 17 com TypeScript (Standalone Components)
+- Angular Router para navegação
+- HttpClient para comunicação com API RESTful
+- TailwindCSS para estilização
+- RXJS para gerenciamento reativo
+- Angular Reactive Forms com validações customizadas
+- Serviços para autenticação JWT e manipulação de tokens
+- Toasts personalizados para feedback do usuário
 
 ---
 
 ## 📁 Estrutura do Projeto
 
 ```
-/src
-  /pages          # Páginas da aplicação (Login, Dashboard, etc.)
-  /components     # Componentes reutilizáveis
-  /services       # Comunicação com API (axios)
-  /contexts       # Contextos globais (auth, tema, etc.)
-  /hooks          # Hooks personalizados
-  /routes         # Definição das rotas
-  /types          # Tipagens globais
-  /utils          # Utilitários e helpers
-  /styles         # Estilos globais (tailwind)
+/src/app
+  /components       # Componentes reutilizáveis e UI
+  /pages            # Páginas e views (Login, Registro, Dashboard, etc.)
+  /services         # Serviços para comunicação com API e lógica de negócio
+  /validations      # Validadores customizados para formulários
+  /models           # Modelos e interfaces TypeScript
+  /shared           # Utilitários, interceptors, e constantes
+  /styles           # Estilos globais (tailwind.css configurado)
 ```
 
 ---
 
 ## 🔐 Funcionalidades
 
-- Login com persistência de token JWT
-- Rotas públicas e privadas com controle de autenticação
-- Cadastro e listagem de Pacientes
-- Cadastro e listagem de Profissionais
-- Agendamento de Consultas
-- Alterações de status da consulta:
-  - Confirmar, Iniciar, Finalizar, Cancelar, Não comparecimento
-- Feedbacks e validações de formulários
+- Login com persistência e renovação automática de token JWT
+- Registro de usuário com validação avançada (senha forte, confirmação)
+- Validações de formulário em tempo real (nome, e-mail, senha, etc)
+- Navegação com rotas públicas e privadas protegidas
+- Cadastro e gerenciamento de Pacientes e Profissionais
+- Agendamento e gerenciamento completo de Consultas
+- Alterações de status da consulta (Confirmar, Iniciar, Finalizar, Cancelar, Não comparecimento)
+- Feedback visual e via toasts
 - Interface responsiva e acessível
 
 ---
@@ -54,61 +52,40 @@ Este é o frontend da aplicação **MedSync**, desenvolvido com **React 19**, **
 ### Pré-requisitos
 
 - Node.js 18+
+- Angular CLI 17+ instalado
 - Backend rodando localmente (`http://localhost:5000`)
 
 ### Instalação
 
 ```bash
-cd frontend
 npm install
-npm run dev
+npm run start
 ```
 
-Acesse em: `http://localhost:5173`
+Acesse em: `http://localhost:4200`
 
 ---
 
 ## 🌐 Variáveis de Ambiente
 
-Crie um arquivo `.env` na raiz do projeto com:
+Crie um arquivo `src/environments/environment.ts` com:
 
+```ts
+export const environment = {
+  production: false,
+  apiBaseUrl: 'http://localhost:5000/api'
+};
 ```
-VITE_API_URL=http://localhost:5000/api
-```
-
----
-
-## 🧪 Testes (opcional)
-
-> Planejado para ser estendido com React Testing Library + Jest
 
 ---
 
 ## 🧼 Boas Práticas Aplicadas
 
-- Componentização clara com separação de responsabilidades
-- Formulários fortemente tipados com validação automática
-- Navegação protegida por rotas privadas
-- Comunicação isolada com API via camada de serviços
-- Estilização com TailwindCSS + reutilização via classes utilitárias
-
----
-
-## 🧪 Exemplo de Stack Atual
-
-```json
-"dependencies": {
-  "axios": "^1.7.2",
-  "lucide-react": "^0.525.0",
-  "react": "^19.1.0",
-  "react-dom": "^19.1.0",
-  "react-hook-form": "^7.52.1",
-  "react-router-dom": "^6.24.0",
-  "zod": "^3.23.8",
-  "@hookform/resolvers": "^3.3.1",
-  "@radix-ui/react-dialog": "^1.0.6"
-}
-```
+- Componentização clara com Standalone Components
+- Formulários reativos com validações customizadas em tempo real
+- Navegação protegida por guards e rotas privadas
+- Comunicação isolada com API via serviços Angular
+- Estilização com TailwindCSS
 
 ---
 

@@ -56,7 +56,7 @@ export class Login {
     this.auth.login(email, password).subscribe({
       next: () => {
         (window as any).showToast('Login realizado com sucesso!', 'success');
-        this.router.navigate(['/']);
+        this.router.navigate(['/app/']);
       },
       error: (err) => {
         (window as any).showToast('Erro ao fazer login: ' + err.message, 'error');
