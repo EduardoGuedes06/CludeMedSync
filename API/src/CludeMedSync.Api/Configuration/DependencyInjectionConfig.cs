@@ -1,6 +1,7 @@
 ﻿using CludeMedSync.Data.Auth;
 using CludeMedSync.Data.Context;
 using CludeMedSync.Data.Repositories;
+using CludeMedSync.Data.Repositories.Utils;
 using CludeMedSync.Domain.Interfaces;
 using CludeMedSync.Domain.Models;
 using CludeMedSync.Service.Interfaces;
@@ -16,10 +17,13 @@ namespace CludeMedSync.Api.Configuration
 		public static IServiceCollection ResolveDependencies(this IServiceCollection services)
 		{
 			services.AddSingleton<DbConnectionFactory>();
+
 			services.AddScoped<IPacienteRepository, PacienteRepository>();
 			services.AddScoped<IProfissionalRepository, ProfissionalRepository>();
 			services.AddScoped<IConsultaRepository, ConsultaRepository>();
 			services.AddScoped<IConsultaLogRepository, ConsultaLogRepository>();
+
+			services.AddScoped(typeof(IPagedResultRepository<>), typeof(PagedResultRepository<>));
 
 			services.AddScoped<IUserStore<Usuario>, DapperUserStore>();
 
@@ -28,9 +32,11 @@ namespace CludeMedSync.Api.Configuration
 			services.AddScoped<IConsultaService, ConsultaService>();
 
 			services.AddScoped<IAuthService, AuthService>();
+
 			services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 
 			return services;
 		}
+
 	}
 }

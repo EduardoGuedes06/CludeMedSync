@@ -1,11 +1,12 @@
-﻿using CludeMedSync.Service.Common;
-using CludeMedSync.Service.DTOs;
+﻿using CludeMedSync.Models.Request;
+using CludeMedSync.Models.Response;
+using CludeMedSync.Service.Common;
 
 namespace CludeMedSync.Service.Interfaces
 {
 	public interface IAuthService
 	{
-		Task<ResultadoOperacao<object>> RegisterAsync(RegisterDto registerDto);
-		Task<ResultadoOperacao<TokenResponseDto>> LoginAsync(LoginDto loginDto);
+		Task<ResultadoOperacao<object>> RegisterAsync(RegisterRequest RegisterRequest);
+		Task<ResultadoOperacao<TokenResponse>> LoginAsync(LoginRequest loginDto);
 	}
 }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CludeMedSync.Service.DTOs
+namespace CludeMedSync.Service.Models.Request
 {
-	public record AgendarConsultaDto(
+	public record AgendarConsultaRequest(
 		int PacienteId,
 		int ProfissionalId,
 		DateTime DataHoraInicio,
@@ -14,19 +14,9 @@ namespace CludeMedSync.Service.DTOs
 		string? Observacao
 	);
 
-	public record AtualizarConsultaDto(
+	public record AtualizarConsultaRequest(
 		DateTime DataHoraInicio,
 		string? Motivo,
 		string? Observacao
-	);
-
-	public record ConsultaDto(
-		int Id,
-		int PacienteId,
-		int ProfissionalId,
-		DateTime DataHoraInicio,
-		DateTime DataHoraFim,
-		string Status,
-		string Observacao
 	);
 }

@@ -1,4 +1,5 @@
 ﻿using CludeMedSync.Data.Context;
+using CludeMedSync.Data.Repositories.Utils;
 using CludeMedSync.Domain.Interfaces;
 using CludeMedSync.Domain.Models;
 using Dapper;

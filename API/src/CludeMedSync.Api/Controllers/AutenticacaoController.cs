@@ -1,5 +1,6 @@
-﻿using CludeMedSync.Service.Common;
-using CludeMedSync.Service.DTOs;
+﻿using CludeMedSync.Models.Request;
+using CludeMedSync.Models.Response;
+using CludeMedSync.Service.Common;
 using CludeMedSync.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,9 +30,9 @@ namespace CludeMedSync.Api.Controllers
 		[HttpPost("register")]
 		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status200OK)]
-		public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
+		public async Task<IActionResult> Register([FromBody] RegisterRequest RegisterRequest)
 		{
-			var result = await _authService.RegisterAsync(registerDto);
+			var result = await _authService.RegisterAsync(RegisterRequest);
 			if (!result.Sucesso)
 			{
 				return Ok(result);
@@ -47,8 +48,8 @@ namespace CludeMedSync.Api.Controllers
 		/// <response code="404">Retorna o Resultado da Operacao</response>
 		[HttpPost("login")]
 		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(typeof(ResultadoOperacao<TokenResponseDto>), StatusCodes.Status200OK)]
-		public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+		[ProducesResponseType(typeof(ResultadoOperacao<TokenResponse>), StatusCodes.Status200OK)]
+		public async Task<IActionResult> Login([FromBody] LoginRequest loginDto)
 		{
 			var result = await _authService.LoginAsync(loginDto);
 			if (!result.Sucesso)

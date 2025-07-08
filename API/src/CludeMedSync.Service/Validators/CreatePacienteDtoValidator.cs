@@ -1,11 +1,11 @@
-﻿using CludeMedSync.Service.DTOs;
+﻿using CludeMedSync.Models.Request;
 using FluentValidation;
 
 namespace CludeMedSync.Service.Validators
 {
-	public class CreatePacienteDtoValidator : AbstractValidator<CreatePacienteDto>
+	public class CreatePacienteResponseValidator : AbstractValidator<PacienteRequest>
 	{
-		public CreatePacienteDtoValidator()
+		public CreatePacienteResponseValidator()
 		{
 			RuleFor(x => x.NomeCompleto)
 				.NotEmpty().WithMessage("O nome completo é obrigatório.")

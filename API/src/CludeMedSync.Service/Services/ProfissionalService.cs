@@ -2,75 +2,74 @@
 using CludeMedSync.Domain.Interfaces;
 using CludeMedSync.Domain.Models;
 using CludeMedSync.Domain.Models.Utils.Enums;
+using CludeMedSync.Models.Request;
+using CludeMedSync.Models.Response;
 using CludeMedSync.Service.Common;
-using CludeMedSync.Service.DTOs;
 using CludeMedSync.Service.Interfaces;
-using System.Threading.Tasks;
 
 namespace CludeMedSync.Service.Services
 {
-	public class ProfissionalService : IProfissionalService
+	public class ProfissionalService : BaseService<Profissional>, IProfissionalService
 	{
 		private readonly IProfissionalRepository _profissionalRepository;
 		private readonly IConsultaRepository _consultaRepository;
-		private readonly IMapper _mapper;
-
 
 		public ProfissionalService(
-			IProfissionalRepository profissionalRepository, 
+			IProfissionalRepository profissionalRepository,
 			IConsultaRepository consultaRepository,
-			IMapper mapper)
+			IMapper mapper,
+			IPagedResultRepository<Profissional> pagedRepository)
+			: base(mapper, pagedRepository)
 		{
 			_profissionalRepository = profissionalRepository;
 			_consultaRepository = consultaRepository;
-			_mapper = mapper;
 		}
 
-		public async Task<ProfissionalDto?> GetByIdAsync(int id)
+		public async Task<ProfissionalResponse?> GetByIdAsync(int id)
 		{
 			var profissional = await _profissionalRepository.GetByIdAsync(id);
-			return _mapper.Map<ProfissionalDto>(profissional);
+			return _mapper.Map<ProfissionalResponse>(profissional);
 		}
 
-		public async Task<IEnumerable<ProfissionalDto>> GetAllAsync()
+		public async Task<IEnumerable<ProfissionalResponse>> GetAllAsync()
 		{
 			var profissionais = await _profissionalRepository.GetAllAsync();
 
-			return _mapper.Map<IEnumerable<ProfissionalDto>>(profissionais);
+			return _mapper.Map<IEnumerable<ProfissionalResponse>>(profissionais);
 
 		}
 
-		public async Task<ResultadoOperacao<ProfissionalDto>> CreateAsync(CreateProfissionalDto profissionalDto)
+		public async Task<ResultadoOperacao<ProfissionalResponse>> CreateAsync(ProfissionalRequest profissionalRequest)
 		{
 			var (existe, mensagem) = await _profissionalRepository.VerificarDuplicidadeProfissionalAsync(
-				profissionalDto.CRM,
-				profissionalDto.Email,
-				profissionalDto.Telefone
+				profissionalRequest.CRM,
+				profissionalRequest.Email,
+				profissionalRequest.Telefone
 			);
 
 			if (existe)
-				return ResultadoOperacao<ProfissionalDto>.Falha(mensagem);
+				return ResultadoOperacao<ProfissionalResponse>.Falha(mensagem);
 
-			var profissional = _mapper.Map<Profissional>(profissionalDto);
+			var profissional = _mapper.Map<Profissional>(profissionalRequest);
 
 			var novoId = await _profissionalRepository.AddAsync(profissional);
 			profissional.Id = novoId;
 
-			var dto = _mapper.Map<ProfissionalDto>(profissional);
+			var dto = _mapper.Map<ProfissionalResponse>(profissional);
 
-			return ResultadoOperacao<ProfissionalDto>.Ok("Profissional cadastrado com sucesso.", dto);
+			return ResultadoOperacao<ProfissionalResponse>.Ok("Profissional cadastrado com sucesso.", dto);
 		}
 
-		public async Task<bool> UpdateAsync(int id, CreateProfissionalDto profissionalDto)
+		public async Task<bool> UpdateAsync(int id, ProfissionalRequest ProfissionalResponse)
 		{
 			var profissional = await _profissionalRepository.GetByIdAsync(id);
 			if (profissional == null) return false;
 
-			profissional.NomeCompleto = profissionalDto.NomeCompleto;
-			profissional.Especialidade = profissionalDto.Especialidade;
-			profissional.CRM = profissionalDto.CRM;
-			profissional.Email = profissionalDto.Email;
-			profissional.Telefone = profissionalDto.Telefone;
+			profissional.NomeCompleto = ProfissionalResponse.NomeCompleto;
+			profissional.Especialidade = ProfissionalResponse.Especialidade;
+			profissional.CRM = ProfissionalResponse.CRM;
+			profissional.Email = ProfissionalResponse.Email;
+			profissional.Telefone = ProfissionalResponse.Telefone;
 
 			return await _profissionalRepository.UpdateAsync(profissional);
 		}

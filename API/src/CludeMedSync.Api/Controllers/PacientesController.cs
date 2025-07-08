@@ -1,7 +1,8 @@
-﻿using CludeMedSync.Service.Common;
-using CludeMedSync.Service.DTOs;
+﻿using CludeMedSync.Domain.Entities.Utils;
+using CludeMedSync.Models.Request;
+using CludeMedSync.Models.Response;
+using CludeMedSync.Service.Common;
 using CludeMedSync.Service.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CludeMedSync.Api.Controllers
@@ -31,11 +32,22 @@ namespace CludeMedSync.Api.Controllers
 		/// <response code="404">Consulta não encontrada</response>
 		/// <response code="500">Erro interno</response>
 		[HttpGet]
-		[ProducesResponseType(typeof(IEnumerable<PacienteDto>), StatusCodes.Status200OK)]
-		public async Task<IActionResult> GetAll()
+		[ProducesResponseType(typeof(PagedResult<PacienteResponse>), StatusCodes.Status200OK)]
+		public async Task<IActionResult> GetAll(
+		[FromQuery] int page = 1,
+		[FromQuery] int pageSize = 10,
+		[FromQuery] string? orderBy = null,
+		[FromQuery] bool orderByDesc = false,
+		[FromQuery] bool ativo = true)
 		{
-			var pacientes = await _pacienteService.GetAllAsync();
-			return Ok(pacientes);
+			var pacientesPaginados = await _pacienteService.ObterPaginadoGenericoAsync(
+				page,
+				pageSize,
+				filtros: null,
+				orderBy: orderBy,
+				orderByDesc: orderByDesc,
+				tipoDto: typeof(PacienteResponse));
+			return Ok(pacientesPaginados);
 		}
 
 
@@ -49,7 +61,7 @@ namespace CludeMedSync.Api.Controllers
 		/// <response code="404">Consulta não encontrada</response>
 		/// <response code="500">Erro interno</response>
 		[HttpGet("{id}")]
-		[ProducesResponseType(typeof(PacienteDto), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(PacienteResponse), StatusCodes.Status200OK)]
 		public async Task<IActionResult> GetById(int id)
 		{
 			var paciente = await _pacienteService.GetByIdAsync(id);
@@ -59,16 +71,16 @@ namespace CludeMedSync.Api.Controllers
 		/// <summary>
 		/// Cria um novo paciente.
 		/// </summary>
-		/// <param name="pacienteDto">Dados do paciente a ser criado.</param>
+		/// <param name="PacienteResponse">Dados do paciente a ser criado.</param>
 		/// <returns>Paciente criado.</returns>
 		/// <response code="201">Paciente criado com sucesso</response>
 		/// <response code="400">Dados inválidos ou paciente já existente</response>
 		[HttpPost]
-		[ProducesResponseType(typeof(ResultadoOperacao<PacienteDto>), StatusCodes.Status201Created)]
+		[ProducesResponseType(typeof(ResultadoOperacao<PacienteResponse>), StatusCodes.Status201Created)]
 		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status400BadRequest)]
-		public async Task<IActionResult> Create([FromBody] CreatePacienteDto pacienteDto)
+		public async Task<IActionResult> Create([FromBody] PacienteRequest PacienteResponse)
 		{
-			var resultado = await _pacienteService.CreateAsync(pacienteDto);
+			var resultado = await _pacienteService.CreateAsync(PacienteResponse);
 
 			if (!resultado.Sucesso)
 				return BadRequest(resultado);
@@ -80,7 +92,7 @@ namespace CludeMedSync.Api.Controllers
 		/// Atualiza os dados de um paciente existente.
 		/// </summary>
 		/// <param name="id">ID do paciente.</param>
-		/// <param name="pacienteDto">Novos dados do paciente.</param>
+		/// <param name="PacienteResponse">Novos dados do paciente.</param>
 		/// <returns>Status da operação.</returns>
 		/// <response code="204">Paciente atualizado com sucesso</response>
 		/// <response code="400">Dados inválidos</response>
@@ -88,9 +100,9 @@ namespace CludeMedSync.Api.Controllers
 		/// <response code="500">Erro interno</response>
 		[HttpPut("{id}")]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		public async Task<IActionResult> Update(int id, [FromBody] CreatePacienteDto pacienteDto)
+		public async Task<IActionResult> Update(int id, [FromBody] PacienteRequest PacienteResponse)
 		{
-			var sucesso = await _pacienteService.UpdateAsync(id, pacienteDto);
+			var sucesso = await _pacienteService.UpdateAsync(id, PacienteResponse);
 			return sucesso ? NoContent() : NotFound();
 		}
 
@@ -106,7 +118,7 @@ namespace CludeMedSync.Api.Controllers
 		[HttpDelete("{id}")]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(ResultadoOperacao<>), StatusCodes.Status204NoContent)]
-		[ProducesResponseType(typeof(ResultadoOperacao<PacienteDto>), StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(ResultadoOperacao<PacienteResponse>), StatusCodes.Status400BadRequest)]
 
 		public async Task<IActionResult> Delete(int id)
 		{

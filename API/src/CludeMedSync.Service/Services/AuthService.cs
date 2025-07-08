@@ -1,6 +1,7 @@
 ﻿using CludeMedSync.Domain.Models;
+using CludeMedSync.Models.Request;
+using CludeMedSync.Models.Response;
 using CludeMedSync.Service.Common;
-using CludeMedSync.Service.DTOs;
 using CludeMedSync.Service.Interfaces;
 using CludeMedSync.Service.Settings;
 using Microsoft.AspNetCore.Identity;
@@ -29,9 +30,9 @@ public class AuthService : IAuthService
 		}
 	}
 
-	public async Task<ResultadoOperacao<object>> RegisterAsync(RegisterDto registerDto)
+	public async Task<ResultadoOperacao<object>> RegisterAsync(RegisterRequest RegisterRequest)
 	{
-		var userExists = await _userManager.FindByEmailAsync(registerDto.Email);
+		var userExists = await _userManager.FindByEmailAsync(RegisterRequest.Email);
 		if (userExists != null)
 		{
 			return ResultadoOperacao<object>.Falha("Já existe uma conta com este endereço de e-mail.");
@@ -40,13 +41,13 @@ public class AuthService : IAuthService
 		var user = new Usuario
 		{
 			Id = Guid.NewGuid().ToString(),
-			UserName = registerDto.Email,
-			Email = registerDto.Email,
+			UserName = RegisterRequest.Email,
+			Email = RegisterRequest.Email,
 			SecurityStamp = Guid.NewGuid().ToString(),
 			Role = "User"
 		};
 
-		var result = await _userManager.CreateAsync(user, registerDto.Password);
+		var result = await _userManager.CreateAsync(user, RegisterRequest.Password);
 
 		if (!result.Succeeded)
 		{
@@ -57,12 +58,12 @@ public class AuthService : IAuthService
 		return ResultadoOperacao<object>.Ok("Usuário registrado com sucesso.");
 	}
 
-	public async Task<ResultadoOperacao<TokenResponseDto>> LoginAsync(LoginDto loginDto)
+	public async Task<ResultadoOperacao<TokenResponse>> LoginAsync(LoginRequest	 loginDto)
 	{
 		var user = await _userManager.FindByEmailAsync(loginDto.Email);
 		if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
 		{
-			return ResultadoOperacao<TokenResponseDto>.Falha("E-mail ou palavra-passe inválidos.");
+			return ResultadoOperacao<TokenResponse>.Falha("E-mail ou palavra-passe inválidos.");
 		}
 
 		var accessToken = GenerateAccessToken(user);
@@ -73,12 +74,12 @@ public class AuthService : IAuthService
 
 		await _userManager.UpdateAsync(user);
 
-		var tokenResponse = new TokenResponseDto(
+		var tokenResponse = new TokenResponse(
 			AccessToken: new JwtSecurityTokenHandler().WriteToken(accessToken),
 			RefreshToken: refreshToken
 		);
 
-		return ResultadoOperacao<TokenResponseDto>.Ok("Login realizado com sucesso.", tokenResponse);
+		return ResultadoOperacao<TokenResponse>.Ok("Login realizado com sucesso.", tokenResponse);
 	}
 
 	private JwtSecurityToken GenerateAccessToken(Usuario user)

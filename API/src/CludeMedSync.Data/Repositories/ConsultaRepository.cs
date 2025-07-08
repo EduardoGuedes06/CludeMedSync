@@ -1,10 +1,14 @@
 ﻿using CludeMedSync.Data.Context;
+using CludeMedSync.Data.Repositories.Utils;
+using CludeMedSync.Domain.Entities.Pagination;
+using CludeMedSync.Domain.Entities.Utils;
 using CludeMedSync.Domain.Interfaces;
 using CludeMedSync.Domain.Models;
 using CludeMedSync.Domain.Models.Utils.Enums;
 using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +20,31 @@ namespace CludeMedSync.Data.Repositories
 		public ConsultaRepository(DbConnectionFactory connectionFactory) : base(connectionFactory)
 		{
 		}
+
+		public async Task<PagedResult<ConsultaCompleta>> GetConsultasPaginadoAsync(
+			int page, int pageSize, object? filtros = null, string? orderBy = null, bool orderByDesc = false)
+		{
+			string colunas = @$"
+			co.Id AS {nameof(ConsultaCompleta.ConsultaId)},
+			co.UsuarioId AS {nameof(ConsultaCompleta.UsuarioId)},
+			co.PacienteId AS {nameof(ConsultaCompleta.PacienteId)},
+			COALESCE(p.NomeCompleto, 'Fora do Sistema') AS {nameof(ConsultaCompleta.PacienteNome)},
+			co.ProfissionalId AS {nameof(ConsultaCompleta.ProfissionalId)},
+			COALESCE(pr.NomeCompleto, 'Fora do Sistema') AS {nameof(ConsultaCompleta.ProfissionalNome)},
+			co.DataHoraInicio AS {nameof(ConsultaCompleta.DataHoraInicio)},
+			co.DataHoraFim AS {nameof(ConsultaCompleta.DataHoraFim)},
+			CAST(co.Status AS CHAR) AS {nameof(ConsultaCompleta.Status)},
+			co.Observacao AS {nameof(ConsultaCompleta.Observacao)}";
+			string tabelas = @$"
+			{nameof(Consulta)} co
+			INNER JOIN {nameof(Paciente)} p ON co.PacienteId = p.Id
+			INNER JOIN {nameof(Profissional)} pr ON co.ProfissionalId = pr.Id";
+
+			return await GetPaginadoComplexoAsync<ConsultaCompleta>(
+				page, pageSize, colunas, tabelas,
+				filtrosDinamicos: filtros, orderBy: orderBy, orderByDesc: orderByDesc);
+		}
+
 
 		public async Task<(Consulta? consulta, Paciente? paciente, Profissional? profissional)> GetByIdComAgregadosAsync(int id)
 		{

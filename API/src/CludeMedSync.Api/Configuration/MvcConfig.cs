@@ -14,7 +14,7 @@ namespace CludeMedSync.Api.Configuration
 				.AddDataAnnotationsLocalization();
 
 			services.AddFluentValidationAutoValidation();
-			services.AddValidatorsFromAssemblyContaining<CreatePacienteDtoValidator>();
+			services.AddValidatorsFromAssemblyContaining<CreatePacienteResponseValidator>();
 
 			services.AddLocalization(options => options.ResourcesPath = "Resources");
 

@@ -1,15 +1,18 @@
 ﻿using AutoMapper;
 using CludeMedSync.Domain.Entities;
+using CludeMedSync.Domain.Entities.Pagination;
 using CludeMedSync.Domain.Entities.Utils.Enums;
 using CludeMedSync.Domain.Interfaces;
 using CludeMedSync.Domain.Models;
+using CludeMedSync.Models.Response;
 using CludeMedSync.Service.Common;
-using CludeMedSync.Service.DTOs;
 using CludeMedSync.Service.Interfaces;
+using CludeMedSync.Service.Models.Request;
+using CludeMedSync.Service.Models.Response;
 
 namespace CludeMedSync.Service.Services
 {
-	public class ConsultaService : IConsultaService
+	public class ConsultaService : BaseService<Consulta>, IConsultaService
 	{
 		private readonly IConsultaRepository _consultaRepository;
 		private readonly IPacienteRepository _pacienteRepository;
@@ -18,34 +21,35 @@ namespace CludeMedSync.Service.Services
 		private readonly IMapper _mapper;
 
 		public ConsultaService(
-			IConsultaRepository consultaRepository,
-			IPacienteRepository pacienteRepository,
-			IProfissionalRepository profissionalRepository,
-			IConsultaLogRepository consultaLogRepository,
-			IMapper mapper)
+		IConsultaRepository consultaRepository,
+		IPacienteRepository pacienteRepository,
+		IProfissionalRepository profissionalRepository,
+		IConsultaLogRepository consultaLogRepository,
+		IMapper mapper,
+		IPagedResultRepository<Consulta> pagedRepository)
+		: base(mapper, pagedRepository)
 		{
 			_consultaRepository = consultaRepository;
 			_pacienteRepository = pacienteRepository;
 			_profissionalRepository = profissionalRepository;
 			_consultaLogRepository = consultaLogRepository;
-			_mapper = mapper;
 		}
 
 		#region Consulta (CRUD e Atualização Manual)
 
-		public async Task<IEnumerable<ConsultaDto>> GetAllAsync()
+		public async Task<IEnumerable<ConsultaResponse>> GetAllAsync()
 		{
 			var consultas = await _consultaRepository.GetAllAsync();
-			return _mapper.Map<IEnumerable<ConsultaDto>>(consultas);
+			return _mapper.Map<IEnumerable<ConsultaResponse>>(consultas);
 		}
 
-		public async Task<IEnumerable<ConsultaLogDto>> GetAlllogsAsync()
+		public async Task<IEnumerable<ConsultaLogResponse>> GetAlllogsAsync()
 		{
 			var historicoConsultas = await _consultaLogRepository.GetAllAsync();
-			return _mapper.Map<IEnumerable<ConsultaLogDto>>(historicoConsultas);
+			return _mapper.Map<IEnumerable<ConsultaLogResponse>>(historicoConsultas);
 		}
 
-		public async Task<ConsultaDto?> GetByIdAsync(int id)
+		public async Task<ConsultaResponse?> GetByIdAsync(int id)
 		{
 			var (consulta, paciente, profissional) = await _consultaRepository.GetByIdComAgregadosAsync(id);
 			if (consulta == null || paciente == null || profissional == null)
@@ -53,49 +57,49 @@ namespace CludeMedSync.Service.Services
 				return null;
 			}
 
-			return _mapper.Map<ConsultaDto>(consulta);
+			return _mapper.Map<ConsultaResponse>(consulta);
 		}
 
-		public async Task<IEnumerable<ConsultaLogDto>> GetLogsAsync()
+		public async Task<IEnumerable<ConsultaLogResponse>> GetLogsAsync()
 		{
 			var logs = await _consultaLogRepository.GetAllAsync();
-			return _mapper.Map<IEnumerable<ConsultaLogDto>>(logs);
+			return _mapper.Map<IEnumerable<ConsultaLogResponse>>(logs);
 		}
 
-		public async Task<ResultadoOperacao<ConsultaDto>> AgendarAsync(AgendarConsultaDto dto, Guid usuarioId)
+		public async Task<ResultadoOperacao<ConsultaResponse>> AgendarAsync(AgendarConsultaRequest dto, Guid usuarioId)
 		{
 			var paciente = await _pacienteRepository.GetByIdAsync(dto.PacienteId);
 			if (paciente is null)
-				return ResultadoOperacao<ConsultaDto>.Falha("Paciente não encontrado", status: 404);
+				return ResultadoOperacao<ConsultaResponse>.Falha("Paciente não encontrado", status: 404);
 
 			var profissional = await _profissionalRepository.GetByIdAsync(dto.ProfissionalId);
 			if (profissional is null)
-				return ResultadoOperacao<ConsultaDto>.Falha("Profissional não encontrado.", status: 404);
+				return ResultadoOperacao<ConsultaResponse>.Falha("Profissional não encontrado.", status: 404);
 
 			if (await _consultaRepository.ExisteConsultaNoMesmoDiaAsync(dto.PacienteId, dto.ProfissionalId, dto.DataHoraInicio))
-				return ResultadoOperacao<ConsultaDto>.Falha("Este paciente já possui uma consulta com este profissional no mesmo dia.");
+				return ResultadoOperacao<ConsultaResponse>.Falha("Este paciente já possui uma consulta com este profissional no mesmo dia.");
 
 			if (await _consultaRepository.ExisteConsultaNoMesmoHorarioAsync(dto.ProfissionalId, dto.DataHoraInicio))
-				return ResultadoOperacao<ConsultaDto>.Falha("O profissional não está disponível neste horário.");
+				return ResultadoOperacao<ConsultaResponse>.Falha("O profissional não está disponível neste horário.");
 
 			var novaConsulta = Consulta.Agendar(usuarioId, dto.PacienteId, dto.ProfissionalId, dto.DataHoraInicio, dto.Motivo, dto.Observacao);
 			var novoId = await _consultaRepository.AddAsync(novaConsulta);
 
 			await LogConsultaAsync(novoId, novaConsulta, paciente, profissional);
 
-			var consultaDto = _mapper.Map<ConsultaDto>(novaConsulta);
-			return ResultadoOperacao<ConsultaDto>.Ok("Consulta agendada com sucesso.", consultaDto);
+			var ConsultaResponse = _mapper.Map<ConsultaResponse>(novaConsulta);
+			return ResultadoOperacao<ConsultaResponse>.Ok("Consulta agendada com sucesso.", ConsultaResponse);
 		}
 
-		public async Task<ResultadoOperacao<ConsultaDto>> AtualizarAsync(int id, AtualizarConsultaDto dto, Guid usuarioId)
+		public async Task<ResultadoOperacao<ConsultaResponse>> AtualizarAsync(int id, AtualizarConsultaRequest dto, Guid usuarioId)
 		{
 			var (consulta, paciente, profissional) = await _consultaRepository.GetByIdComAgregadosAsync(id);
 
 			if (consulta is null)
-				return ResultadoOperacao<ConsultaDto>.Falha("Consulta não encontrada.", status: 404);
+				return ResultadoOperacao<ConsultaResponse>.Falha("Consulta não encontrada.", status: 404);
 
 			if (consulta.UsuarioId != usuarioId)
-				return ResultadoOperacao<ConsultaDto>.Falha("Você não tem permissão para alterar esta consulta.", status: 403);
+				return ResultadoOperacao<ConsultaResponse>.Falha("Você não tem permissão para alterar esta consulta.", status: 403);
 
 			try
 			{
@@ -103,17 +107,17 @@ namespace CludeMedSync.Service.Services
 			}
 			catch (Exception ex)
 			{
-				return ResultadoOperacao<ConsultaDto>.Falha(ex.Message);
+				return ResultadoOperacao<ConsultaResponse>.Falha(ex.Message);
 			}
 
 			var sucesso = await _consultaRepository.UpdateAsync(consulta);
 			if (!sucesso)
-				return ResultadoOperacao<ConsultaDto>.Falha("Erro ao atualizar a consulta.");
+				return ResultadoOperacao<ConsultaResponse>.Falha("Erro ao atualizar a consulta.");
 
 			await LogConsultaAsync(consulta.Id, consulta, paciente!, profissional!);
 
-			var consultaDto = _mapper.Map<ConsultaDto>(consulta);
-			return ResultadoOperacao<ConsultaDto>.Ok("Consulta atualizada com sucesso.", consultaDto);
+			var ConsultaResponse = _mapper.Map<ConsultaResponse>(consulta);
+			return ResultadoOperacao<ConsultaResponse>.Ok("Consulta atualizada com sucesso.", ConsultaResponse);
 		}
 
 		#endregion
@@ -198,6 +202,51 @@ namespace CludeMedSync.Service.Services
 
 			await _consultaLogRepository.AddAsync(log);
 		}
+
+		public async Task<object> ObterConsultasPaginadoAsync(
+			 int page,
+			 int pageSize,
+			 object? filtros = null,
+			 string? orderBy = null,
+			 bool orderByDesc = false)
+		{
+			var resultado = await _consultaRepository.GetConsultasPaginadoAsync(
+				page, pageSize, filtros, orderBy, orderByDesc);
+
+			var pagedDto = new PagedResultResponse<ConsultaCompleta>
+			{
+				Items = resultado.Items,
+				TotalCount = resultado.TotalCount,
+				Page = resultado.Page,
+				PageSize = resultado.PageSize
+			};
+
+			return pagedDto;
+		}
+
+
+
+		public async Task<object> ObterConsultasLogPaginadoAsync(
+			int page,
+			int pageSize,
+			object? filtros = null,
+			string? orderBy = null,
+			bool orderByDesc = false)
+		{
+			var resultado = await _consultaLogRepository.GetConsultasLogPaginadoAsync(
+			page, pageSize, filtros, orderBy, orderByDesc);
+
+			var pagedDto = new PagedResultResponse<ConsultaLogCompleta>
+			{
+				Items = resultado.Items,
+				TotalCount = resultado.TotalCount,
+				Page = resultado.Page,
+				PageSize = resultado.PageSize
+			};
+
+			return pagedDto;
+		}
+
 
 		#endregion
 	}

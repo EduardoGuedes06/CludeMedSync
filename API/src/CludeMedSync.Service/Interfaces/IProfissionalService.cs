@@ -1,14 +1,23 @@
-﻿using CludeMedSync.Service.Common;
-using CludeMedSync.Service.DTOs;
+﻿using CludeMedSync.Models.Request;
+using CludeMedSync.Models.Response;
+using CludeMedSync.Service.Common;
 
 namespace CludeMedSync.Service.Interfaces
 {
 	public interface IProfissionalService
 	{
-		Task<ProfissionalDto?> GetByIdAsync(int id);
-		Task<IEnumerable<ProfissionalDto>> GetAllAsync();
-		Task<bool> UpdateAsync(int id, CreateProfissionalDto profissionalDto);
+		Task<object> ObterPaginadoGenericoAsync(
+					int page,
+					int pageSize,
+					object? filtros = null,
+					string? orderBy = null,
+					bool orderByDesc = false,
+					bool ativo = true,
+					Type tipoDto = null!);
+		Task<ProfissionalResponse?> GetByIdAsync(int id);
+		Task<IEnumerable<ProfissionalResponse>> GetAllAsync();
+		Task<bool> UpdateAsync(int id, ProfissionalRequest Profissional);
 		Task<ResultadoOperacao<object>> DeleteAsync(int id);
-		Task<ResultadoOperacao<ProfissionalDto>> CreateAsync(CreateProfissionalDto profissionalDto);
+		Task<ResultadoOperacao<ProfissionalResponse>> CreateAsync(ProfissionalRequest Profissional);
 	}
 }

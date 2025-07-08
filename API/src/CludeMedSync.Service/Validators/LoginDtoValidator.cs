@@ -1,14 +1,9 @@
-﻿using CludeMedSync.Service.DTOs;
+﻿using CludeMedSync.Models.Request;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CludeMedSync.Service.Validators
 {
-	public class LoginDtoValidator : AbstractValidator<LoginDto>
+	public class LoginDtoValidator : AbstractValidator<LoginRequest>
 	{
 		public LoginDtoValidator()
 		{
