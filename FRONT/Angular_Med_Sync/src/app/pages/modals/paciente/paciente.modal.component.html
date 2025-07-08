@@ -1,0 +1,33 @@
+<form id="paciente-form" (submit)="onSubmit($event)">
+    <input type="hidden" id="paciente-id" />
+
+    <div class="form-group">
+        <label for="paciente-name">Nome Completo:</label>
+        <input type="text" id="paciente-name" required />
+    </div>
+
+    <div class="form-group">
+        <label for="data-Nascimento">Data de Nascimento:</label>
+        <input type="text" id="data-Nascimento" />
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="text" id="email" required />
+    </div>
+    <div class="form-group">
+        <label for="cpf">CPF:</label>
+        <input type="text" id="cpf" required />
+    </div>
+
+    <div class="form-group">
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" required />
+    </div>
+
+    <div class="modal-actions">
+        <button type="button" id="cancel-paciente-btn" class="btn secondary-btn" (click)="fecharModal()">
+            Cancelar
+        </button>
+        <button type="submit" class="btn primary-btn">Salvar paciente</button>
+    </div>
+</form>

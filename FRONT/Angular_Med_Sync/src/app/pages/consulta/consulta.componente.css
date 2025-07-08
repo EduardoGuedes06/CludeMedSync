@@ -1,0 +1,6 @@
+.toolbar-actions .button-group {
+  display: flex !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+}
+

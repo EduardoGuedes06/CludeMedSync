@@ -1,0 +1,87 @@
+<div class="section-header">
+  <h2 class="section-title">Profissional</h2>
+  <div class="toolbar">
+    <div class="toolbar-actions">
+      <div class="button-group">
+        <button class="btn success-btn" (click)="abrirModalProfissional()"><i class="fas fa-user-plus"></i> Novo Funcionário</button>
+        <button class="btn primary-btn"><i class="fas fa-file-excel"></i> Exportar EXCEL</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <input type="text" placeholder="Busca avançada..." class="search-input">
+
+  <select class="filter-select">
+    <option value="ativo">Ativo</option>
+    <option value="inativo">Inativo</option>
+  </select>
+
+  <select class="filter-select">
+    <option value="">Ordenar por</option>
+    <option value="nome_asc">Nome (A-Z)</option>
+    <option value="nome_desc">Nome (Z-A)</option>
+    <option value="mais_recente">Mais Recentes</option>
+    <option value="mais_antigo">Mais Antigos</option>
+  </select>
+</div>
+
+<div class="entity-list-grid">
+  <div class="entity-card">
+    <h3>Dra. Fernanda Oliveira</h3>
+    <p>CRM: 123456-SP</p>
+    <p>Email: fernanda.oliveiragmailclinica.com</p>
+    <div class="badges-container">
+      <span class="badge">Ativa</span>
+    </div>
+    <div class="actions">
+      <button class="btn primary-btn"><i class="fas fa-edit"></i> Editar</button>
+      <button class="btn danger-btn"><i class="fas fa-trash"></i> Excluir</button>
+    </div>
+  </div>
+
+  <div class="entity-card">
+    <h3>Dr. Rafael Lima</h3>
+    <p>CRM: 789101-RJ</p>
+    <p>Email: rafael.limagmailhospital.com</p>
+    <div class="badges-container">
+      <span class="badge warning-badge">Inativo</span>
+    </div>
+    <div class="actions">
+      <button class="btn primary-btn"><i class="fas fa-edit"></i> Editar</button>
+      <button class="btn danger-btn"><i class="fas fa-trash"></i> Excluir</button>
+    </div>
+  </div>
+
+  <div class="entity-card">
+    <h3>Dra. Camila Souza</h3>
+    <p>CRM: 456789-MG</p>
+    <p>Email: camila.souzagmailmedcare.com</p>
+    <div class="badges-container">
+      <span class="badge">Ativa</span>
+    </div>
+    <div class="actions">
+      <button class="btn primary-btn"><i class="fas fa-edit"></i> Editar</button>
+      <button class="btn danger-btn"><i class="fas fa-trash"></i> Excluir</button>
+    </div>
+  </div>
+</div>
+
+<div class="pagination-controls">
+  <button class="btn" disabled>Anterior</button>
+  <button class="btn active">1</button>
+  <button class="btn">2</button>
+  <button class="btn">Próximo</button>
+</div>
+
+<app-generic-modal
+  [aberto]="modalAberto"
+  (fechar)="fecharModalProfissional()"
+  [titulo]="'Cadastro Profissional'"
+>
+  <app-modal-profissional
+    (fechar)="fecharModalProfissional()"
+    (salvar)="salvarProfissional($event)"
+  ></app-modal-profissional>
+</app-generic-modal>

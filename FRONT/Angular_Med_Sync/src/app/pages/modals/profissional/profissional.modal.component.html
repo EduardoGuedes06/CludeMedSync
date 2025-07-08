@@ -1,0 +1,33 @@
+<form id="profissional-form" (submit)="onSubmit($event)">
+    <input type="hidden" id="profissional-id" />
+
+    <div class="form-group">
+        <label for="profissional-name">Nome Completo:</label>
+        <input type="text" id="profissional-name" required />
+    </div>
+
+    <div class="form-group">
+        <label for="especialidade">Especialidade:</label>
+        <input type="text" id="especialidade" />
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="text" id="email" required />
+    </div>
+    <div class="form-group">
+        <label for="crm">CRM:</label>
+        <input type="text" id="crm" required />
+    </div>
+
+    <div class="form-group">
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" required />
+    </div>
+
+    <div class="modal-actions">
+        <button type="button" id="cancel-profissional-btn" class="btn secondary-btn" (click)="fecharModal()">
+            Cancelar
+        </button>
+        <button type="submit" class="btn primary-btn">Salvar Profissional</button>
+    </div>
+</form>

@@ -1,0 +1,14 @@
+<div *ngIf="aberto" class="modal-fundo" [class.active]="aberto" (click)="fecharModal()">
+
+  <div class="modal-conteudo" (click)="$event.stopPropagation()">
+
+    <button class="close-button fixed-top-right" (click)="fecharModal()">&times;</button>
+    <div class="modal-header">
+      <h3 class="modal-titulo">{{ titulo }}</h3>
+    </div>
+
+    <div class="modal-body">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

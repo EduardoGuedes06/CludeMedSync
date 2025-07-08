@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { Consultas } from './pages/consultas/consultas';
-import { Pacientes } from './pages/pacientes/pacientes';
-import { Profissionais } from './pages/profissionais/profissionais';
+import { Consultas } from './pages/consulta/consulta.component';
+import { Pacientes } from './pages/pacientes/pacientes.component';
+import { Profissionais } from './pages/profissionais/profissionais.component';
 import { Configuracoes } from './pages/configuracoes/configuracoes';
 import { BemVindo } from './pages/bem-vindo/bem-vindo';
 import { MainLayout } from './pages/main-layout/main-layout';
