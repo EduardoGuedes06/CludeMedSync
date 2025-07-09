@@ -62,7 +62,7 @@ namespace CludeMedSync.Tests.Services
 			_profissionalRepoMock.Setup(r => r.GetByIdAsync(request.ProfissionalId)).ReturnsAsync(new Profissional { Id = 1, NomeCompleto = "Dr. Teste" });
 			_consultaRepoMock.Setup(r => r.ExisteConsultaNoMesmoDiaAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DateTime>())).ReturnsAsync(false);
 			_consultaRepoMock.Setup(r => r.ExisteConsultaNoMesmoHorarioAsync(It.IsAny<int>(), It.IsAny<DateTime>())).ReturnsAsync(false);
-			_consultaRepoMock.Setup(r => r.AddAsync(It.IsAny<Consulta>())).ReturnsAsync(100); // Retorna o ID da nova consulta
+			_consultaRepoMock.Setup(r => r.AddAsync(It.IsAny<Consulta>())).ReturnsAsync(100);
 			var resultado = await _service.AgendarAsync(request, usuarioId);
 
 			resultado.Sucesso.Should().BeTrue();

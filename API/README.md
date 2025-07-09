@@ -111,6 +111,21 @@ A execução desses testes é automatizada através de pipelines de Integração
 
 ## 🚀 Executando Localmente
 
+
+📸 *Swagger:*  
+![Swagger](./doc/swagger.PNG)
+
+📸 *Health Checks UI:*  
+![Health Checks UI](./doc/health.PNG)
+
+📸 *Postman:*  
+![Postman](./doc/postman.PNG)
+
+📸 *Testes Unitarios:*  
+![Postman](./doc/testes.PNG)
+
+
+
 ### Com .NET CLI
 
 ```bash
