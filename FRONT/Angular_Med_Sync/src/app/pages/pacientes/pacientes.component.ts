@@ -139,24 +139,20 @@ export class Pacientes implements OnInit {
     this.carregarPacientes();
   }
 
-  // --- Métodos do Modal ---
-
   abrirModalPaciente() {
     this.modalAberto = true;
   }
 
   fecharModalPaciente() {
     this.modalAberto = false;
-    this.pacienteSelecionado = null; // Limpa a seleção ao fechar o modal
+    this.pacienteSelecionado = null;
   }
 
   salvarPaciente(paciente: any) {
-    // A lógica de salvar (criar ou atualizar) chamaria o serviço aqui
     this.fecharModalPaciente();
-    this.carregarPacientes(); // Recarrega a lista após salvar
+    this.carregarPacientes();
   }
 
-  // --- Funções Auxiliares ---
 
   calcularIdade(dataNascimento: string | Date): number {
     if (!dataNascimento) return 0;

@@ -15,6 +15,7 @@ namespace CludeMedSync.Service.Mappings
 	{
 		public MappingProfile()
 		{
+
 			CreateMap<Paciente, PacienteResponse>();
 			CreateMap<PacienteRequest, Paciente>();
 
