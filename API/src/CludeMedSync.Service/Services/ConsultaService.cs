@@ -87,8 +87,21 @@ namespace CludeMedSync.Service.Services
 
 			await LogConsultaAsync(novoId, novaConsulta, paciente, profissional);
 
-			var ConsultaResponse = _mapper.Map<ConsultaResponse>(novaConsulta);
-			return ResultadoOperacao<ConsultaResponse>.Ok("Consulta agendada com sucesso.", ConsultaResponse);
+			var consultaResponse = new ConsultaResponse(
+						Id: novoId,
+						UsuarioId: novaConsulta.UsuarioId,
+						NomePaciente: paciente.NomeCompleto,
+						NomeProfissional: profissional.NomeCompleto,
+						PacienteId: novaConsulta.PacienteId,
+						ProfissionalId: novaConsulta.ProfissionalId,
+						DataHoraInicio: novaConsulta.DataHoraInicio,
+						DataHoraFim: novaConsulta.DataHoraFim,
+						Status: ((EnumStatusConsulta)novaConsulta.Status).ToString(),
+						Observacao: novaConsulta.Observacao
+					);
+
+
+			return ResultadoOperacao<ConsultaResponse>.Ok("Consulta agendada com sucesso.", consultaResponse);
 		}
 
 		public async Task<ResultadoOperacao<ConsultaResponse>> AtualizarAsync(int id, AtualizarConsultaRequest dto, Guid usuarioId)

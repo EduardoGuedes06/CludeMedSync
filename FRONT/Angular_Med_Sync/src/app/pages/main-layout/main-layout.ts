@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { AuthService } from '../../services/auth';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -16,11 +16,10 @@ export class MainLayout implements OnInit {
   sidebarActive = window.innerWidth >= 768;
 
   sections = [
-    { id: 'painel', icon: 'fas fa-home', label: 'Painel', route: '/app/home' },
     { id: 'consultas', icon: 'fas fa-calendar-check', label: 'Consultas', route: '/app/consultas' },
     { id: 'pacientes', icon: 'fas fa-user-injured', label: 'Pacientes', route: '/app/pacientes' },
     { id: 'profissionais', icon: 'fas fa-user-md', label: 'Profissionais', route: '/app/profissionais' },
-    { id: 'configuracoes', icon: 'fas fa-cog', label: 'Configurações', route: '/app/configuracoes' },
+    { id: 'historico-consultas', icon: 'fas fa fa-history', label: 'Historico', route: '/app/historico-consultas' },
   ];
 
   constructor(
@@ -49,7 +48,6 @@ export class MainLayout implements OnInit {
   }
 
   ngOnInit() {
-    debugger
     const token = this.authService.getToken();
     if (!token) {
       (window as any).showToast('Você precisa estar autenticado para acessar o painel.', 'warning');

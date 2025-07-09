@@ -1,4 +1,5 @@
-﻿using CludeMedSync.Domain.Entities.Pagination;
+﻿using CludeMedSync.Api.Extensions.Helpers;
+using CludeMedSync.Domain.Entities.Pagination;
 using CludeMedSync.Domain.Entities.Utils;
 using CludeMedSync.Models.Response;
 using CludeMedSync.Service.Common;
@@ -33,20 +34,33 @@ namespace CludeMedSync.Api.Controllers
 		/// <response code="404"></response>
 		/// <response code="500">Erro interno</response>
 		[HttpGet]
-		[ProducesResponseType(typeof(PagedResult<ConsultaCompleta>), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(ResultadoOperacao<PagedResult<ConsultaCompleta>>), StatusCodes.Status200OK)]
 		public async Task<IActionResult> GetAll(
 		[FromQuery] int page = 1,
 		[FromQuery] int pageSize = 10,
+		[FromQuery] string? filtros = null,
 		[FromQuery] string? orderBy = null,
 		[FromQuery] bool orderByDesc = false)
 		{
+			object? filtrosObj = null;
+			if (!string.IsNullOrWhiteSpace(filtros))
+			{
+				filtrosObj = ParseFiltros(filtros) as IDictionary<string, object>;
+
+				var (valido, erro) = FiltroConsultaValidator.ValidarFiltros((IDictionary<string, object>)filtrosObj!);
+				if (!valido)
+					return BadRequest(ResultadoOperacao<object>.Falha(erro!));
+			}
+
 			var pacientesPaginados = await _consultaService.ObterConsultasPaginadoAsync(
-				page,
-				pageSize,
-				filtros: null,
-				orderBy: orderBy,
-				orderByDesc: orderByDesc);
-			return Ok(pacientesPaginados);
+					page,
+					pageSize,
+					filtros: filtrosObj,
+					orderBy: orderBy,
+					orderByDesc: orderByDesc);
+
+			var resultado = ResultadoOperacao<object>.Ok("Consultas obtidas com sucesso", pacientesPaginados);
+			return Ok(resultado);
 		}
 
 		/// <summary>
@@ -57,46 +71,34 @@ namespace CludeMedSync.Api.Controllers
 		/// <response code="404"></response>
 		/// <response code="500">Erro interno</response>
 		[HttpGet("log")]
-		[ProducesResponseType(typeof(PagedResult<ConsultaLogResponse>), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(ResultadoOperacao<PagedResult<ConsultaLogResponse>>), StatusCodes.Status200OK)]
 		public async Task<IActionResult> GetAllLog(
 		[FromQuery] int page = 1,
 		[FromQuery] int pageSize = 10,
+		[FromQuery] string? filtros = null,
 		[FromQuery] string? orderBy = null,
 		[FromQuery] bool orderByDesc = false)
 		{
+			object? filtrosObj = null;
+			if (!string.IsNullOrWhiteSpace(filtros))
+			{
+				filtrosObj = ParseFiltros(filtros) as IDictionary<string, object>;
+
+				var (valido, erro) = FiltroConsultaValidator.ValidarFiltros((IDictionary<string, object>)filtrosObj!);
+				if (!valido)
+					return BadRequest(ResultadoOperacao<object>.Falha(erro!));
+			}
 			var logPacientesPaginados = await _consultaService.ObterConsultasLogPaginadoAsync(
 				page,
 				pageSize,
-				filtros: null,
+				filtros: filtrosObj,
 				orderBy: orderBy,
 				orderByDesc: orderByDesc);
-			return Ok(logPacientesPaginados);
+
+			var resultado = ResultadoOperacao<object>.Ok("Logs obtidos com sucesso", logPacientesPaginados);
+			return Ok(resultado);
 		}
 
-		/// <summary>
-		/// Retorna o historio de uma Consulta.
-		/// </summary>
-		/// <returns>Lista de consultas.</returns>
-		/// <response code="200">Retorna a lista de consultas</response>
-		/// <response code="404"></response>
-		/// <response code="500">Erro interno</response>
-		[HttpGet("log/{idConsulta}")]
-		[ProducesResponseType(typeof(PagedResult<ConsultaLogResponse>), StatusCodes.Status200OK)]
-		public async Task<IActionResult> GetAllLog(
-		[FromQuery] int idConsulta = 1,
-		[FromQuery] int page = 1,
-		[FromQuery] int pageSize = 10,
-		[FromQuery] string? orderBy = null,
-		[FromQuery] bool orderByDesc = false)
-		{
-			var logPacientesPaginados = await _consultaService.ObterConsultasLogPaginadoAsync(
-				page,
-				pageSize,
-				filtros: new { ConsultaId = idConsulta },
-				orderBy: orderBy,
-				orderByDesc: orderByDesc);
-			return Ok(logPacientesPaginados);
-		}
 
 		/// <summary>
 		/// Retorna uma consulta específica pelo ID.

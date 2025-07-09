@@ -1,0 +1,20 @@
+<form id="consulta-form" (submit)="onSubmit($event)">
+    <input type="hidden" id="consulta-id" />
+
+    <div class="form-group">
+        <label for="consulta-motivo">Motivo:</label>
+        <input type="text" id="consulta-motivo" required />
+    </div>
+
+    <div class="form-group">
+        <label for="consulta-obs">Observação:</label>
+        <input type="text" id="consulta-obs" />
+    </div>
+
+    <div class="modal-actions">
+        <button type="button" id="cancel-profissional-btn" class="btn secondary-btn" (click)="fecharModal()">
+            Cancelar
+        </button>
+        <button type="submit" class="btn primary-btn">Salvar Consulta</button>
+    </div>
+</form>

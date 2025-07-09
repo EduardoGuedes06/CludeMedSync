@@ -19,8 +19,4 @@
     <ProjectReference Include="..\CludeMedSync.Service\CludeMedSync.Service.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Extensions\Helpers\" />
-  </ItemGroup>
-
 </Project>

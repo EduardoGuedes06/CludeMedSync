@@ -33,7 +33,7 @@ namespace CludeMedSync.Data.Repositories
 			COALESCE(pr.NomeCompleto, 'Fora do Sistema') AS {nameof(ConsultaCompleta.ProfissionalNome)},
 			co.DataHoraInicio AS {nameof(ConsultaCompleta.DataHoraInicio)},
 			co.DataHoraFim AS {nameof(ConsultaCompleta.DataHoraFim)},
-			CAST(co.Status AS CHAR) AS {nameof(ConsultaCompleta.Status)},
+			co.Status AS {nameof(ConsultaCompleta.Status)},
 			co.Observacao AS {nameof(ConsultaCompleta.Observacao)}";
 			string tabelas = @$"
 			{nameof(Consulta)} co

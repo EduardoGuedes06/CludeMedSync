@@ -3,15 +3,19 @@
   <div class="toolbar">
     <div class="toolbar-actions">
       <div class="button-group">
-        <button class="btn success-btn">
+
+        <button class="btn success-btn" (click)="abrirModalCrud()">
           <i class="fas fa-calendar-plus"></i> Nova Consulta
         </button>
-        <button class="btn primary-btn">
+
+        <button class="btn primary-btn" (click)="visualizarHistorico()">
           <i class="fas fa-history"></i> Visualizar Histórico
         </button>
-        <button class="btn primary-btn">
+
+        <button class="btn primary-btn" (click)="exportarExcel()">
           <i class="fas fa-file-excel"></i> Exportar EXCEL
         </button>
+
       </div>
     </div>
   </div>
@@ -38,6 +42,8 @@
 </div>
 
 <div class="card">
+  <h3 class="section-subtitle">Consultas em Andamento</h3>
+  <br>
   <div class="table-responsive">
     <table class="data-table">
       <thead>
@@ -45,7 +51,7 @@
           <th>Paciente</th>
           <th>Médico</th>
           <th>Inicio da Consulta</th>
-          <th>Encerramento da Consulta</th>
+          <th>Ultima Movimentação</th>
           <th>Status</th>
           <th>Ações</th>
         </tr>
@@ -58,7 +64,7 @@
           <td>01/07/2025 14:30</td>
           <td><span class="badge status-approved">Realizada</span></td>
           <td class="actions-cell">
-            <button class="btn-icon" title="Visualizar" (click)="abrirModalConsulta()"><i
+            <button class="btn-icon" title="Visualizar" (click)="abrirModalLog()"><i
                 class="fas fa-eye"></i></button>
             <button class="btn-icon" title="Editar"><i class="fas fa-edit"></i></button>
             <button class="btn-icon" title="Cancelar"><i class="fas fa-times-circle"></i></button>
@@ -71,7 +77,8 @@
           <td>01/07/2025 14:30</td>
           <td><span class="badge status-pending">Agendada</span></td>
           <td class="actions-cell">
-            <button class="btn-icon" title="Visualizar" (click)="abrirModalConsulta()"><i
+            <button class="btn-icon" title="Iniciar"><i class="fa fa-plus"></i></button>
+            <button class="btn-icon" title="Visualizar" (click)="abrirModalLog()"><i
                 class="fas fa-eye"></i></button>
             <button class="btn-icon" title="Editar"><i class="fas fa-edit"></i></button>
             <button class="btn-icon" title="Cancelar"><i class="fas fa-times-circle"></i></button>
@@ -88,8 +95,97 @@
     <button class="btn">Próximo</button>
   </div>
 
-  <app-generic-modal [aberto]="modalAberto" (fechar)="fecharModalConsulta()" [titulo]="'Log de Atividade da Consulta'">
-    <app-consulta-log-modal (fechar)="fecharModalConsulta()"></app-consulta-log-modal>
-  </app-generic-modal>
-
 </div>
+
+<br>
+
+<div class="filter-bar">
+  <input type="text" placeholder="Busca avançada por paciente, médico ou data..." class="search-input">
+
+  <select class="filter-select">
+    <option value="">Status da Consulta</option>
+    <option value="agendada">Agendada</option>
+    <option value="realizada">Realizada</option>
+    <option value="cancelada">Cancelada</option>
+  </select>
+
+  <select class="filter-select">
+    <option value="">Ordenar por</option>
+    <option value="data_asc">Data (Mais Antiga)</option>
+    <option value="data_desc">Data (Mais Recente)</option>
+    <option value="paciente_asc">Paciente (A-Z)</option>
+    <option value="paciente_desc">Paciente (Z-A)</option>
+  </select>
+</div>
+
+<div class="consultas-section">
+  <div class="card">
+    <h3 class="section-subtitle">Próximas Consultas (Agendadas)</h3>
+    <br>
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Paciente</th>
+            <th>Médico</th>
+            <th>Inicio da Consulta</th>
+            <th>Ultima Movimentação</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Maria da Silva</td>
+            <td>Dr. João Pedro</td>
+            <td>01/07/2025 14:00</td>
+            <td>01/07/2025 14:30</td>
+            <td><span class="badge status-approved">Realizada</span></td>
+            <td class="actions-cell">
+              <button class="btn-icon" title="Visualizar" (click)="abrirModalLog()"><i
+                  class="fas fa-eye"></i></button>
+              <button class="btn-icon" title="Editar"><i class="fas fa-edit"></i></button>
+              <button class="btn-icon" title="Cancelar"><i class="fas fa-times-circle"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>Carlos Eduardo</td>
+            <td>Dra. Ana Júlia</td>
+            <td>01/07/2025 14:00</td>
+            <td>01/07/2025 14:30</td>
+            <td><span class="badge status-pending">Agendada</span></td>
+            <td class="actions-cell">
+              <button class="btn-icon" title="Iniciar"><i class="fa fa-plus"></i></button>
+              <button class="btn-icon" title="Visualizar" (click)="abrirModalLog()"><i
+                  class="fas fa-eye"></i></button>
+              <button class="btn-icon" title="Editar"><i class="fas fa-edit"></i></button>
+              <button class="btn-icon" title="Cancelar"><i class="fas fa-times-circle"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination-controls">
+      <button class="btn" disabled>Anterior</button>
+      <button class="btn active">1</button>
+      <button class="btn">2</button>
+      <button class="btn">Próximo</button>
+    </div>
+  </div>
+</div>
+
+<app-generic-modal 
+    [aberto]="modalCrudAberto" 
+    (fechar)="fecharModalCrud()" 
+    [titulo]="'Registrar Nova Consulta'"> 
+    <app-consulta-crud-modal (fechar)="fecharModalCrud()"></app-consulta-crud-modal>
+</app-generic-modal>
+
+<app-generic-modal 
+    [aberto]="modalLogAberto" 
+    (fechar)="fecharModalLog()" 
+    [titulo]="'Log de Atividade da Consulta'">
+    
+    <app-consulta-log-modal (fechar)="fecharModalLog()"></app-consulta-log-modal>
+
+</app-generic-modal>

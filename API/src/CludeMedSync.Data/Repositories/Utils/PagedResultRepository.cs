@@ -35,11 +35,20 @@ namespace CludeMedSync.Data.Repositories.Utils
 			string orderByColumn = !string.IsNullOrWhiteSpace(orderBy) ? orderBy : "Id";
 
 			string whereClause = "";
-			if (filtros != null)
+
+			var parameters = new DynamicParameters();
+			parameters.Add("Offset", offset);
+			parameters.Add("PageSize", pageSize);
+
+			if (filtros is IDictionary<string, object> filtroDict && filtroDict.Any())
 			{
-				var props = filtros.GetType().GetProperties();
-				var conditions = props.Select(p => $"{p.Name} = @{p.Name}");
+				var conditions = filtroDict.Keys.Select(k => $"{k} = @{k}");
 				whereClause = "WHERE " + string.Join(" AND ", conditions);
+
+				foreach (var kvp in filtroDict)
+				{
+					parameters.Add(kvp.Key, kvp.Value);
+				}
 			}
 
 			var countSql = $"SELECT COUNT(*) FROM {_tableName} {whereClause};";
@@ -51,23 +60,12 @@ namespace CludeMedSync.Data.Repositories.Utils
 				LIMIT @PageSize OFFSET @Offset;
 			";
 
-			var parameters = new DynamicParameters();
-			parameters.Add("Offset", offset);
-			parameters.Add("PageSize", pageSize);
-
-			if (filtros != null)
-			{
-				foreach (var prop in filtros.GetType().GetProperties())
-				{
-					parameters.Add(prop.Name, prop.GetValue(filtros));
-				}
-			}
-
 			int totalCount = await connection.ExecuteScalarAsync<int>(countSql, parameters);
 			var items = (await connection.QueryAsync<T>(dataSql, parameters)).ToList();
 
 			return new PagedResult<T>(items, totalCount, currentPage, pageSize);
 		}
+
 
 
 	}

@@ -1,4 +1,6 @@
-﻿using CludeMedSync.Models.Request;
+﻿using CludeMedSync.Api.Extensions.Helpers;
+using CludeMedSync.Domain.Entities.Utils;
+using CludeMedSync.Models.Request;
 using CludeMedSync.Models.Response;
 using CludeMedSync.Service.Common;
 using CludeMedSync.Service.Interfaces;
@@ -14,7 +16,7 @@ namespace CludeMedSync.Api.Controllers
 	//[Authorize]
 	[ApiController]
 	[Route("api/[controller]")]
-	public class ProfissionaisController : ControllerBase
+	public class ProfissionaisController : BaseController
 	{
 		private readonly IProfissionalService _profissionalService;
 
@@ -29,22 +31,34 @@ namespace CludeMedSync.Api.Controllers
 		/// <returns>Lista de profissionais.</returns>
 		/// <response code="200">Retorna a lista de profissionais</response>
 		[HttpGet]
-		[ProducesResponseType(typeof(IEnumerable<ProfissionalResponse>), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(ResultadoOperacao<PagedResult<ProfissionalResponse>>), StatusCodes.Status200OK)]
 		public async Task<IActionResult> GetAll(
 		[FromQuery] int page = 1,
 		[FromQuery] int pageSize = 10,
+		[FromQuery] string? filtros = null,
 		[FromQuery] string? orderBy = null,
-		[FromQuery] bool orderByDesc = false,
-		[FromQuery] bool ativo = true)
+		[FromQuery] bool orderByDesc = false)
 		{
-			var proffisionaisPaginados = await _profissionalService.ObterPaginadoGenericoAsync(
+			object? filtrosObj = null;
+			if (!string.IsNullOrWhiteSpace(filtros))
+			{
+				filtrosObj = ParseFiltros(filtros) as IDictionary<string, object>;
+
+				var (valido, erro) = FiltroProfissionalValidator.ValidarFiltros((IDictionary<string, object>)filtrosObj!);
+				if (!valido)
+					return BadRequest(ResultadoOperacao<object>.Falha(erro!));
+			}
+
+			var profissionaisPaginados = await _profissionalService.ObterPaginadoGenericoAsync(
 				page,
 				pageSize,
 				filtros: null,
 				orderBy: orderBy,
 				orderByDesc: orderByDesc,
 				tipoDto: typeof(ProfissionalResponse));
-			return Ok(proffisionaisPaginados);
+
+			var resultado = ResultadoOperacao<object>.Ok("Profissionais obtidos com sucesso", profissionaisPaginados);
+			return Ok(resultado);
 		}
 
 		/// <summary>

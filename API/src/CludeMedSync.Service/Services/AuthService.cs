@@ -58,7 +58,7 @@ public class AuthService : IAuthService
 		return ResultadoOperacao<object>.Ok("Usuário registrado com sucesso.");
 	}
 
-	public async Task<ResultadoOperacao<TokenResponse>> LoginAsync(LoginRequest	 loginDto)
+	public async Task<ResultadoOperacao<TokenResponse>> LoginAsync(LoginRequest loginDto)
 	{
 		var user = await _userManager.FindByEmailAsync(loginDto.Email);
 		if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
@@ -66,16 +66,15 @@ public class AuthService : IAuthService
 			return ResultadoOperacao<TokenResponse>.Falha("E-mail ou palavra-passe inválidos.");
 		}
 
-		var accessToken = GenerateAccessToken(user);
+		var accessTokenObject = GenerateAccessToken(user);
 		var refreshToken = GenerateRefreshToken();
-
 		user.RefreshToken = refreshToken;
 		user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpirationDays);
-
 		await _userManager.UpdateAsync(user);
 
 		var tokenResponse = new TokenResponse(
-			AccessToken: new JwtSecurityTokenHandler().WriteToken(accessToken),
+			AccessToken: new JwtSecurityTokenHandler().WriteToken(accessTokenObject),
+			AccessTokenExpiration: accessTokenObject.ValidTo,
 			RefreshToken: refreshToken
 		);
 

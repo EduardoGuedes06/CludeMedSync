@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS Consulta (
     PacienteId INT NOT NULL,
     ProfissionalId INT NOT NULL,
     DataHoraInicio DATETIME NOT NULL,
-    DataHoraFim DATETIME NOT NULL,
+    DataHoraFim DATETIME ,
     Motivo VARCHAR(500),
     Observacao VARCHAR(500),
     Status INT NOT NULL,

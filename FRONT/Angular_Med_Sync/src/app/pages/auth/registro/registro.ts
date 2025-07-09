@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 
-import { AuthService } from '../../../services/auth';
+import { AuthService } from '../../../services/auth/auth.service';
 import { UserValidators } from '../../../validations/modelsValidations/user.validations';
 import { attachValidationHandlers } from '../../../validations/inputValidations/formValidators';
 

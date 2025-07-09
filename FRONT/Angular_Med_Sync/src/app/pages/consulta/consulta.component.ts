@@ -1,29 +1,76 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core'; // Importe OnInit
+import { CommonModule, DatePipe } from '@angular/common'; // Importe DatePipe
 
-import { GenericModalComponent } from '../modals/modal.component'; 
-import { ConsultaLogModal } from '../modals/consulta/consultaLog.modal.component';
+import { GenericModalComponent } from '../modals/modal.component';
+import { ConsultaLogModal } from '../modals/consulta/log/consultaLog.modal.component';
+import { CrudConsultaModalComponent } from '../modals/consulta/crud/upsert.consulta.modal.component';
+
+export interface IConsulta {
+  id: number;
+  pacienteNome: string;
+  profissionalNome: string;
+  dataHoraInicio: Date;
+  dataHoraFim?: Date;
+  status: 'Em Andamento' | 'Agendada' | 'Finalizada' | 'Cancelada';
+}
 
 @Component({
   selector: 'app-consultas',
   standalone: true,
   imports: [
-    CommonModule, 
-    GenericModalComponent, 
-    ConsultaLogModal
+    CommonModule,
+    GenericModalComponent,
+    ConsultaLogModal,
+    CrudConsultaModalComponent
   ],
   templateUrl: './consulta.componente.html',
   styleUrls: ['./consulta.componente.css']
 })
-export class Consultas {
+export class Consultas implements OnInit {
 
-  modalAberto = false;
+  modalLogAberto = false;
+  modalCrudAberto = false;
 
-  abrirModalConsulta() {
-    this.modalAberto = true;
+  consultasEmAndamento: IConsulta[] = [];
+  consultasAgendadas: IConsulta[] = [];
+
+  ngOnInit(): void {
+    this.carregarConsultas();
   }
 
-  fecharModalConsulta() {
-    this.modalAberto = false;
+  carregarConsultas(): void {
+
+  }
+
+  abrirModalLog(): void {
+    this.modalLogAberto = true;
+  }
+
+  fecharModalLog(): void {
+    this.modalLogAberto = false;
+  }
+
+  abrirModalCrud(): void {
+    this.modalCrudAberto = true;
+  }
+
+  fecharModalCrud(): void {
+    this.modalCrudAberto = false;
+  }
+
+
+  novaConsulta(): void {
+
+    this.abrirModalCrud();
+  }
+  
+  visualizarHistorico(): void {
+    console.log("Ação: Visualizar Histórico");
+
+  }
+
+  exportarExcel(): void {
+    console.log("Ação: Exportar para Excel");
+
   }
 }

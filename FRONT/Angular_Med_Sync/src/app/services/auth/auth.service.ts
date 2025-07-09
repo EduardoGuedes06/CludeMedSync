@@ -1,20 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, map, throwError, catchError } from 'rxjs';
-import { environment } from '../environments/environment';
-import { ApiRoutes } from '../shared/api-routes';
-import { ApiResponse } from '../shared/api-response';
+import { environment } from '../../environments/environment';
+import { ApiRoutes } from '../../shared/api-routes';
+import { ApiResponse } from '../../shared/api-response';
+import { AuthTokens } from '../../models/user/authToken';
 
-interface AuthTokens {
-  accessToken: string;
-  refreshToken: string;
-}
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private baseUrl = environment.apiBaseUrl;
-  private tokenKey = 'medsync_token';
-  private refreshKey = 'medsync_refresh';
+  private tokenKey = '';
+  private refreshKey = '';
+  private tokenExpiration = '';
   private _isLoggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
   isLoggedIn$ = this._isLoggedIn.asObservable();
@@ -34,6 +32,7 @@ export class AuthService {
         if (response.dados?.accessToken) {
           localStorage.setItem(this.tokenKey, response.dados.accessToken);
           localStorage.setItem(this.refreshKey, response.dados.refreshToken);
+          localStorage.setItem(this.tokenExpiration, response.dados.accessTokenExpiration);
           this._isLoggedIn.next(true);
         }
         return response;

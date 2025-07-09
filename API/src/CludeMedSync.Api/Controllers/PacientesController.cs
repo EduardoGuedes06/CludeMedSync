@@ -1,4 +1,5 @@
-﻿using CludeMedSync.Domain.Entities.Utils;
+﻿using CludeMedSync.Api.Extensions.Helpers;
+using CludeMedSync.Domain.Entities.Utils;
 using CludeMedSync.Models.Request;
 using CludeMedSync.Models.Response;
 using CludeMedSync.Service.Common;
@@ -14,7 +15,7 @@ namespace CludeMedSync.Api.Controllers
 	//[Authorize]
 	[ApiController]
 	[Route("api/[controller]")]
-	public class PacientesController : ControllerBase
+	public class PacientesController : BaseController
 	{
 		private readonly IPacienteService _pacienteService;
 
@@ -32,23 +33,37 @@ namespace CludeMedSync.Api.Controllers
 		/// <response code="404">Consulta não encontrada</response>
 		/// <response code="500">Erro interno</response>
 		[HttpGet]
-		[ProducesResponseType(typeof(PagedResult<PacienteResponse>), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(ResultadoOperacao<PagedResult<PacienteResponse>>), StatusCodes.Status200OK)]
+		[HttpGet]
 		public async Task<IActionResult> GetAll(
 		[FromQuery] int page = 1,
 		[FromQuery] int pageSize = 10,
+		[FromQuery] string? filtros = null,
 		[FromQuery] string? orderBy = null,
-		[FromQuery] bool orderByDesc = false,
-		[FromQuery] bool ativo = true)
+		[FromQuery] bool orderByDesc = false)
 		{
+			object? filtrosObj = null;
+			if (!string.IsNullOrWhiteSpace(filtros))
+			{
+				filtrosObj = ParseFiltros(filtros) as IDictionary<string, object>;
+
+				var (valido, erro) = FiltroPacienteValidator.ValidarFiltros((IDictionary<string, object>)filtrosObj!);
+				if (!valido)
+					return BadRequest(ResultadoOperacao<object>.Falha(erro!));
+			}
+
 			var pacientesPaginados = await _pacienteService.ObterPaginadoGenericoAsync(
 				page,
 				pageSize,
-				filtros: null,
+				filtros: filtrosObj,
 				orderBy: orderBy,
 				orderByDesc: orderByDesc,
 				tipoDto: typeof(PacienteResponse));
-			return Ok(pacientesPaginados);
+
+			var resultado = ResultadoOperacao<object>.Ok("Pacientes obtidos com sucesso", pacientesPaginados);
+			return Ok(resultado);
 		}
+
 
 
 		/// <summary>

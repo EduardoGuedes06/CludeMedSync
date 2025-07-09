@@ -28,7 +28,7 @@ public class ConsultaLogRepository : Repository<ConsultaLog>, IConsultaLogReposi
             COALESCE(pr.NomeCompleto, 'Fora do Sistema') AS {nameof(ConsultaLogCompleta.ProfissionalNome)},
             co.DataHoraInicio AS {nameof(ConsultaLogCompleta.DataHoraInicio)},
             co.DataHoraFim AS {nameof(ConsultaLogCompleta.DataHoraFim)},
-            CAST(co.Status AS CHAR) AS {nameof(ConsultaLogCompleta.Status)},
+            co.Status AS {nameof(ConsultaLogCompleta.Status)},
             co.Observacao AS {nameof(ConsultaLogCompleta.Observacao)}";
 
 		string tabelas = @$"

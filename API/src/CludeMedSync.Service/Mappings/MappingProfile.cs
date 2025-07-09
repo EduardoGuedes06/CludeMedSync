@@ -31,11 +31,11 @@ namespace CludeMedSync.Service.Mappings
 			CreateMap<ConsultaLog, ConsultaLogResponse>()
 				.ForMember(dest => dest.Status, opt => opt.MapFrom(src => ((EnumStatusConsulta)src.Status).ToString()));
 
-			//CreateMap<ConsultaCompleta, ConsultaResponse>()
-			//	.ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
+			CreateMap<ConsultaCompleta, ConsultaResponse>()
+				.ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
 
-			//CreateMap<ConsultaLogCompleta, ConsultaLogResponse>()
-			//	.ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
+			CreateMap<ConsultaLogCompleta, ConsultaLogResponse>()
+				.ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
 
 			CreateMap(typeof(PagedResult<>), typeof(PagedResultResponse<>))
 				.ForMember("Items", opt => opt.MapFrom("Items"));

@@ -38,53 +38,63 @@ namespace CludeMedSync.Data.Repositories.Utils
 			object? filtrosDinamicos = null,
 			string? orderBy = null,
 			bool orderByDesc = false)
+		{
+			using var connection = _connectionFactory.CreateConnection();
+
+			int currentPage = page > 0 ? page : 1;
+			int offset = (currentPage - 1) * pageSize;
+			string order = orderByDesc ? "DESC" : "ASC";
+			string orderByColumn = !string.IsNullOrWhiteSpace(orderBy) ? orderBy : "(SELECT NULL)";
+
+			var conditions = new List<string>();
+			if (!string.IsNullOrWhiteSpace(whereFixo))
+				conditions.Add(whereFixo);
+
+			var parameters = new DynamicParameters();
+
+			if (filtrosDinamicos is IDictionary<string, object> dict)
+			{
+				foreach (var kv in dict)
 				{
-					using var connection = _connectionFactory.CreateConnection();
-
-					int currentPage = page > 0 ? page : 1;
-					int offset = (currentPage - 1) * pageSize;
-					string order = orderByDesc ? "DESC" : "ASC";
-					string orderByColumn = !string.IsNullOrWhiteSpace(orderBy) ? orderBy : "(SELECT NULL)";
-
-					var conditions = new List<string>();
-					if (!string.IsNullOrWhiteSpace(whereFixo))
-					{
-						conditions.Add(whereFixo);
-					}
-
-					var parameters = new DynamicParameters();
-					if (filtrosDinamicos != null)
-					{
-						var props = filtrosDinamicos.GetType().GetProperties();
-						foreach (var prop in props)
-						{
-							conditions.Add($"{prop.Name} = @{prop.Name}");
-							parameters.Add(prop.Name, prop.GetValue(filtrosDinamicos));
-						}
-					}
-
-					string whereClause = conditions.Any() ? "WHERE " + string.Join(" AND ", conditions) : "";
-
-					string sqlCount = $"SELECT COUNT(*) FROM {tabelasFromJoin} {whereClause};";
-
-					string sqlQuery = $@"
-								SELECT {colunasSelect}
-								FROM {tabelasFromJoin}
-								{whereClause}
-								ORDER BY {orderByColumn} {order}
-								LIMIT @PageSize OFFSET @Offset;
-							";
-
-					parameters.Add("PageSize", pageSize);
-					parameters.Add("Offset", offset);
-
-					using var multi = await connection.QueryMultipleAsync(sqlCount + sqlQuery, parameters);
-
-					int totalCount = await multi.ReadFirstAsync<int>();
-					var items = (await multi.ReadAsync<T>()).ToList();
-
-					return new PagedResult<T>(items, totalCount, currentPage, pageSize);
+					conditions.Add($"{kv.Key} = @{kv.Key}");
+					parameters.Add(kv.Key, kv.Value);
 				}
+			}
+			else if (filtrosDinamicos != null)
+			{
+				var props = filtrosDinamicos.GetType().GetProperties();
+				foreach (var prop in props)
+				{
+					conditions.Add($"{prop.Name} = @{prop.Name}");
+					parameters.Add(prop.Name, prop.GetValue(filtrosDinamicos));
+				}
+			}
+
+			string whereClause = conditions.Any()
+				? "WHERE " + string.Join(" AND ", conditions)
+				: "";
+
+			string sqlCount = $"SELECT COUNT(*) FROM {tabelasFromJoin} {whereClause};";
+
+			string sqlQuery = $@"
+				SELECT {colunasSelect}
+				FROM {tabelasFromJoin}
+				{whereClause}
+				ORDER BY {orderByColumn} {order}
+				LIMIT @PageSize OFFSET @Offset;
+			";
+
+			parameters.Add("PageSize", pageSize);
+			parameters.Add("Offset", offset);
+
+			using var multi = await connection.QueryMultipleAsync(sqlCount + sqlQuery, parameters);
+
+			int totalCount = await multi.ReadFirstAsync<int>();
+			var items = (await multi.ReadAsync<T>()).ToList();
+
+			return new PagedResult<T>(items, totalCount, currentPage, pageSize);
+		}
+
 
 		public virtual async Task<T?> GetByIdAsync(int id)
 		{

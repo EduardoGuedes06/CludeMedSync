@@ -13,61 +13,51 @@
 </div>
 
 <div class="filter-bar">
-  <input type="text" placeholder="Busca avcaçada...." class="search-input">
+  <input type="text" placeholder="Busca por nome, CPF ou e-mail..." class="search-input" 
+         [(ngModel)]="termoBusca" 
+         (input)="onBuscaInput()">
 
-  <select class="filter-select">
-    <option value="ativo">Ativo</option>
-    <option value="inativo">Inativo</option>
+  <select class="filter-select" [(ngModel)]="statusFiltro" (change)="onFiltroChange()">
+    <option value="">Todos</option>
+    <option value="true">Ativo</option>
+    <option value="false">Inativo</option>
   </select>
 
-  <select class="filter-select">
-    <option value="">Ordenar por</option>
-    <option value="nome_asc">Nome (A-Z)</option>
-    <option value="nome_desc">Nome (Z-A)</option>
-    <option value="mais_recente">Mais Recentes</option>
-    <option value="mais_antigo">Mais Antigos</option>
-  </select>
+<select class="filter-select" [(ngModel)]="ordemFiltro" (change)="onFiltroChange()">
+    <option value="Id_desc">Mais Recentes</option>
+    <option value="Id_asc">Mais Antigos</option>
+    <option value="NomeCompleto_asc">Nome (A-Z)</option>
+    <option value="NomeCompleto_desc">Nome (Z-A)</option>
+</select>
 </div>
 
 <div class="entity-list-grid">
-  <div class="entity-card">
-    <h3>Maria da Silva</h3>
-    <p>Idade: 34 anos</p>
-    <p>Email: maria.silvagmail.com</p>
-    <div class="badges-container">
-      <span class="badge">Ativa</span>
-    </div>
-    <div class="actions">
-      <button class="btn primary-btn"><i class="fas fa-edit"></i> Editar</button>
-      <button class="btn danger-btn"><i class="fas fa-trash"></i> Excluir</button>
-    </div>
-  </div>
+  
+<ng-container *ngIf="!isLoading && !errorMessage">
+    <div *ngFor="let paciente of pacientes" class="entity-card">
+      
+      <h3>{{ paciente.nomeCompleto }}</h3>
+      <p>Idade: {{ calcularIdade(paciente.dataNascimento) }} anos</p>
+      <p>Email: {{ paciente.email }}</p>
 
-  <div class="entity-card">
-    <h3>João Pedro Mendes</h3>
-    <p>Idade: 61 anos</p>
-    <p>Email: joaopedrogmail.com</p>
-    <div class="badges-container">
-      <span class="badge warning-badge">Inativo</span>
-    </div>
-    <div class="actions">
-      <button class="btn primary-btn"><i class="fas fa-edit"></i> Editar</button>
-      <button class="btn danger-btn"><i class="fas fa-trash"></i> Excluir</button>
-    </div>
-  </div>
+      <div class="badges-container">
+        <span class="badge">
+          {{ paciente.ativo ? 'Ativo' : 'Inativo' }}
+        </span>
+      </div>
 
-  <div class="entity-card">
-    <h3>Ana Júlia Ribeiro</h3>
-    <p>Idade: 17 anos</p>
-    <p>Email: anajuliagmail.com</p>
-    <div class="badges-container">
-      <span class="badge">Ativa</span>
+      <div class="actions">
+        <button class="btn primary-btn" (click)="editarPaciente(paciente)">
+          <i class="fas fa-edit"></i> Editar
+        </button>
+        <button class="btn danger-btn" (click)="excluirPaciente(paciente)">
+          <i class="fas fa-trash"></i> Excluir
+        </button>
+      </div>
+
     </div>
-    <div class="actions">
-      <button class="btn primary-btn"><i class="fas fa-edit"></i> Editar</button>
-      <button class="btn danger-btn"><i class="fas fa-trash"></i> Excluir</button>
-    </div>
-  </div>
+  </ng-container>
+
 </div>
 
 <div class="pagination-controls">
