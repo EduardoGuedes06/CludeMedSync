@@ -41,7 +41,8 @@ namespace CludeMedSync.Tests.Services
 		public async Task CreateAsync_DeveCriarPaciente_QuandoDadosNaoDuplicados()
 		{
 
-			var request = new PacienteRequest("Paciente Novo", DateTime.Now,"12345678901", "paciente@email.com", "999999999");
+			var data = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 14, 0, 0);
+			var request = new PacienteRequest("Paciente Novo", data, "12345678901", "paciente@email.com", "999999999");
 
 			_pacienteRepoMock.Setup(r => r.VerificarDuplicidadePacienteAsync(request.CPF, request.Email, request.Telefone))
 				.ReturnsAsync((false, null));

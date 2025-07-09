@@ -52,7 +52,7 @@ namespace CludeMedSync.Tests.Services
 			var request = new AgendarConsultaRequest(
 				PacienteId: 1,
 				ProfissionalId: 1,
-				DataHoraInicio: DateTime.Now.AddDays(1),
+				DataHoraInicio: new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 10, 0, 0).AddDays(1),
 				Motivo: "Check-up",
 				Observacao: null
 			);
@@ -69,14 +69,15 @@ namespace CludeMedSync.Tests.Services
 			resultado.Mensagem.Should().Be("Consulta agendada com sucesso.");
 			resultado.Dados.Should().NotBeNull();
 			resultado.Dados?.Id.Should().Be(100);
-			_consultaLogRepoMock.Verify(r => r.AddAsync(It.IsAny<ConsultaLog>()), Times.Once); // Verifica se o log foi gerado
+			_consultaLogRepoMock.Verify(r => r.AddAsync(It.IsAny<ConsultaLog>()), Times.Once);
 		}
 
 		[Fact]
 		public async Task AgendarAsync_DeveFalhar_QuandoPacienteNaoEncontrado()
 		{
-			var request = new AgendarConsultaRequest(1, 1, DateTime.Now, null, null);
-			_pacienteRepoMock.Setup(r => r.GetByIdAsync(request.PacienteId)).ReturnsAsync((Paciente)null); // Paciente não existe
+			var dataAgendamento = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 14, 0, 0);
+			var request = new AgendarConsultaRequest(1, 1, dataAgendamento, null, null);
+			_pacienteRepoMock.Setup(r => r.GetByIdAsync(request.PacienteId)).ReturnsAsync((Paciente)null);
 
 			var resultado = await _service.AgendarAsync(request, Guid.NewGuid());
 
@@ -88,9 +89,10 @@ namespace CludeMedSync.Tests.Services
 		[Fact]
 		public async Task ConfirmarAsync_DeveAlterarStatus_QuandoValido()
 		{
+			var dataAgendamento = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 14, 0, 0);
 			var consultaId = 1;
 			var usuarioId = Guid.NewGuid();
-			var consulta = Consulta.Agendar(usuarioId, 1, 1, DateTime.Now, "Motivo", null);
+			var consulta = Consulta.Agendar(usuarioId, 1, 1, dataAgendamento, "Motivo", null);
 			var paciente = new Paciente { Id = 1, NomeCompleto = "Paciente" };
 			var profissional = new Profissional { Id = 1, NomeCompleto = "Profissional" };
 
