@@ -16,13 +16,23 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/Consultas",
+							"raw": "{{base_url}}/api/Consultas?page=1&pageSize=10",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"Consultas"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
 							]
 						}
 					},
@@ -34,7 +44,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/Consultas/log",
+							"raw": "{{base_url}}/api/Consultas/log?page=1&pageSize=10",
 							"host": [
 								"{{base_url}}"
 							],
@@ -42,26 +52,16 @@
 								"api",
 								"Consultas",
 								"log"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Consultas/log/{idConsulta}",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/Consultas/log/{{idConsulta}}",
-							"host": [
-								"{{base_url}}"
 							],
-							"path": [
-								"api",
-								"Consultas",
-								"log",
-								"{{idConsulta}}"
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
 							]
 						}
 					},
@@ -324,13 +324,23 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/Pacientes",
+							"raw": "{{base_url}}/api/Pacientes?page=1&pageSize=10",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"Pacientes"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
 							]
 						}
 					},
@@ -451,13 +461,23 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/Profissionais",
+							"raw": "{{base_url}}/api/Profissionais?page=1&pageSize=10",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"Profissionais"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
 							]
 						}
 					},
@@ -568,7 +588,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"eduguedes@gmail.com\",\r\n  \"password\": \"Eduardo@123\"\r\n}",
+							"raw": "{\r\n  \"email\": \"teste@gmail.com\",\r\n  \"password\": \"Teste@123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

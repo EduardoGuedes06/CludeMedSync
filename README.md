@@ -28,17 +28,6 @@ Na lógica do agendamento (não só no CRUD), você precisa validar:
 
 ## 🧱 Funcionalidades
 
-### Backend (.NET)
-
-- Cadastro/Login de Usuário com JWT
-- CRUD de Pacientes
-- CRUD de Profissionais de Saúde
-- Agendamento de Consultas com Validações de Regras de Negócio:
-  - Um paciente só pode ter 1 consulta por profissional por dia
-  - Um profissional só pode atender uma consulta por horário
-  - Consultas entre 08h e 18h (dias úteis)
-- Status da Consulta:
-  - Confirmar, Iniciar, Finalizar, Cancelar, Paciente/Profissional não compareceu
 
 ### Frontend (React)
 
@@ -53,9 +42,47 @@ Na lógica do agendamento (não só no CRUD), você precisa validar:
 ---
 
 ## 🗂 Estrutura do Projeto
+### Backend (.NET)
 
-### Backend
+- Cadastro/Login de Usuário com JWT
+- CRUD de Pacientes
+- CRUD de Profissionais de Saúde
+- Agendamento de Consultas com Validações de Regras de Negócio:
+  - Um paciente só pode ter 1 consulta por profissional por dia
+  - Um profissional só pode atender uma consulta por horário
+  - Consultas entre 08h e 18h (dias úteis)
+- Status da Consulta:
+  - Confirmar, Iniciar, Finalizar, Cancelar, Paciente/Profissional não compareceu
 
+## 🚀⚙🚀 Coleção Postman
+Para facilitar os testes e a exploração da API, uma coleção completa do Postman está disponível. Você pode importá-la para o seu ambiente.
+
+- Clique aqui para baixar a coleção do Postman `../MedSync_API.postman_collection.json`
+
+ A API estará em: `https://localhost:7235`
+			- Swagger UI: `https://localhost:7235/swagger`
+
+
+
+##### 🩺 Monitoramento e Saúde (Health Checks)
+
+A API possui um sistema de Health Checks para monitoramento contínuo da saúde da aplicação e de suas dependências.
+Testes de serviços e validações
+
+- Endpoint de Dados (JSON): `GET /saude`
+- Dashboard Visual (JSON): `GET /saude-ui`
+
+
+##### 🧪 Testes Automatizados
+
+O projeto conta com uma suíte completa de testes unitários e de integração, utilizando `xUnit`, para garantir a qualidade e a estabilidade do código nas camadas de Domínio e de Serviço.
+
+A execução desses testes é automatizada através de pipelines de Integração Contínua (CI) configurados no `GitHub` Actions e no `Azure DevOps`, garantindo que cada alteração no código seja validada antes da integração.
+
+- Testes unitários com `xUnit` em camada de Application e Domain
+- Testes de serviços e validações
+
+---
 ```
 /src
   /Application

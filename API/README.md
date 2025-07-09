@@ -3,6 +3,17 @@
 
 Este é o backend da aplicação **MedSync**, construído com **ASP.NET Core 8**, utilizando **DDD (Domain-Driven Design)**, autenticação via **JWT**, e acesso a dados com **Dapper**.
 
+
+---
+
+## 🚀⚙🚀 Coleção Postman
+Para facilitar os testes e a exploração da API, uma coleção completa do Postman está disponível. Você pode importá-la para o seu ambiente.
+
+- Clique aqui para baixar a coleção do Postman `../MedSync_API.postman_collection.json`
+
+- A API estará em: `https://localhost:7235`
+- Swagger UI: `https://localhost:7235/swagger`
+
 ---
 
 ## ⚙️ Tecnologias Utilizadas
@@ -15,6 +26,7 @@ Este é o backend da aplicação **MedSync**, construído com **ASP.NET Core 8**
 - Swagger (Swashbuckle)
 - AutoMapper
 - xUnit (para testes)
+- Health Checks
 - Docker (para execução local)
 
 ---
@@ -38,7 +50,7 @@ Este é o backend da aplicação **MedSync**, construído com **ASP.NET Core 8**
 
 ## 🔐 Autenticação
 
-- Registro: `POST /api/auth/register`
+- Registro: `POST /api/auth/register` – Retorna uma lista paginada de profissionais. Suporta os parâmetros `?page=1&pageSize=10`, além de filtros dinâmicos e ordenação (crescente/decrescente) por qualquer campo, com validação no backend.
 - Login: `POST /api/auth/login`
 - Proteção via `[Authorize]` em endpoints privados
 - Tokens JWT com refresh token
@@ -52,19 +64,20 @@ Este é o backend da aplicação **MedSync**, construído com **ASP.NET Core 8**
 - `POST /api/auth/login` – Login
 
 ### 🧑‍⚕️ Profissionais
-- `GET /api/profissionais`
+- `GET /api/profissionais` – Retorna uma lista paginada de profissionais. Suporta os parâmetros `?page=1&pageSize=10`, além de filtros dinâmicos e ordenação (crescente/decrescente) por qualquer campo, com validação no backend.
 - `POST /api/profissionais`
 - `PUT /api/profissionais/{id}`
 - `DELETE /api/profissionais/{id}`
 
 ### 👨‍💼 Pacientes
-- `GET /api/pacientes`
+- `GET /api/pacientes` – Retorna uma lista paginada de Pacientes. Suporta os parâmetros `?page=1&pageSize=10`, além de filtros dinâmicos e ordenação (crescente/decrescente) por qualquer campo, com validação no backend.
 - `POST /api/pacientes`
 - `PUT /api/pacientes/{id}`
 - `DELETE /api/pacientes/{id}`
 
 ### 📅 Consultas
-- `GET /api/consultas`
+- `GET /api/consultas` – Retorna uma lista paginada de Consultas. Suporta os parâmetros `?page=1&pageSize=10`, além de filtros dinâmicos e ordenação (crescente/decrescente) por qualquer campo, com validação no backend.
+- `GET /api/consultas/log` – Retorna uma lista paginada de Log das consultas. Suporta os parâmetros `?page=1&pageSize=10`, além de filtros dinâmicos e ordenação (crescente/decrescente) por qualquer campo, com validação no backend.
 - `POST /api/consultas`
 - `PATCH /api/consultas/confirmar/{id}`
 - `PATCH /api/consultas/iniciar/{id}`
@@ -75,7 +88,21 @@ Este é o backend da aplicação **MedSync**, construído com **ASP.NET Core 8**
 
 ---
 
+## 🩺 Monitoramento e Saúde (Health Checks)
+
+A API possui um sistema de Health Checks para monitoramento contínuo da saúde da aplicação e de suas dependências.
+Testes de serviços e validações
+
+- Endpoint de Dados (JSON): `GET /saude`
+- Dashboard Visual (JSON): `GET /saude-ui`
+
+---
+
 ## 🧪 Testes Automatizados
+
+O projeto conta com uma suíte completa de testes unitários e de integração, utilizando `xUnit`, para garantir a qualidade e a estabilidade do código nas camadas de Domínio e de Serviço.
+
+A execução desses testes é automatizada através de pipelines de Integração Contínua (CI) configurados no `GitHub` Actions e no `Azure DevOps`, garantindo que cada alteração no código seja validada antes da integração.
 
 - Testes unitários com `xUnit` em camada de Application e Domain
 - Testes de serviços e validações
@@ -123,4 +150,5 @@ docker-compose up --build
 
 ## 📦 Licença
 
-MIT © 2025 — Desenvolvido para o desafio técnico MedSync.
+MIT © 2025 — Desenvolvido como parte do desafio técnico MedSync. 
+O objetivo foi construir uma API robusta, bem definida e que segue as melhores práticas de arquitetura de software, como DDD, testes automatizados e monitoramento contínuo.
