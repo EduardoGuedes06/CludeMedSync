@@ -57,7 +57,10 @@ Na lógica do agendamento (não só no CRUD), você precisa validar:
 ## 🚀⚙🚀 Coleção Postman
 Para facilitar os testes e a exploração da API, uma coleção completa do Postman está disponível. Você pode importá-la para o seu ambiente.
 
-- Clique aqui para baixar a coleção do Postman `../MedSync_API.postman_collection.json`
+- Clique aqui para baixar a coleção do Postman 
+- [⬇️ Documeentação Postman](API/doc/MedSync_API.postman_collection.json)
+
+`../MedSync_API.postman_collection.json`
 
  A API estará em: `https://localhost:7235`
 			- Swagger UI: `https://localhost:7235/swagger`
