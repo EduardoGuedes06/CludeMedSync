@@ -18,7 +18,7 @@ Na lógica do agendamento (não só no CRUD), você precisa validar:
 ## 📌 Visão Geral do Projeto
 
 - **Backend**: ASP.NET Core 8 com autenticação JWT e DDD  
-- **Frontend**: React 19 + TypeScript + TailwindCSS + Vite  
+- **Frontend**: Angular 19 + TypeScript + TailwindCSS + Vite  
 - **API RESTful** com documentação via Swagger  
 - **Banco de Dados**: MySQL  
 - **Deploy Local** com Docker  
@@ -29,14 +29,14 @@ Na lógica do agendamento (não só no CRUD), você precisa validar:
 
 ## 🧱 Funcionalidades
 
-### 🔷 Frontend (React)
+### 🔷 Frontend (Angular)
 
 - Login com persistência de token
 - Telas protegidas (Private Routes)
 - Listagem e Cadastro de Pacientes e Profissionais
 - Agendamento de Consultas com seleção de horário e profissional
 - Interface moderna e responsiva (Tailwind + Lucide Icons)
-- Formulários com validação usando Zod + React Hook Form
+- Formulários com validação usando Zod + Angular Hook Form
 - Modal com Radix UI para ações
 
 ---
@@ -125,7 +125,7 @@ O projeto conta com uma suíte completa de testes unitários e de integração, 
   /types
 ```
 
-- Configurado com ESLint, Tailwind, React Router DOM, Axios, Zod
+- Configurado com ESLint, Tailwind, Angular Router DOM, Axios, Zod
 
 ---
 
@@ -166,7 +166,7 @@ docker-compose up --build
 ## 📄 Subdocumentações
 
 - [`/API/README.md`](API/README.md) - Documentação técnica da API (.NET)
-- [`/FRONT/README.md`](FRONT/README.md) - Documentação técnica do React App
+- [`/FRONT/README.md`](FRONT/README.md) - Documentação técnica do Angular App
 - [`/scripts/db-init.sql`](API/src/CludeMedSync.Data/Scripts/01_create_database_and_Tables.sql) - Scripts de criação e seed do banco de dados
 
 ---
@@ -183,7 +183,7 @@ Senha: Teste@123
 ## 📚 Diferenciais Técnicos
 
 - Código limpo e modularizado (DDD + SOLID)
-- Validação forte com Zod + React Hook Form
+- Validação forte com Zod + Angular Hook Form
 - Modal reutilizável com Radix UI
 - Projeto pronto para escalar
 - Estrutura de logs e tratamento de erros

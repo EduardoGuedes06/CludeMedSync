@@ -217,25 +217,28 @@ namespace CludeMedSync.Service.Services
 		}
 
 		public async Task<object> ObterConsultasPaginadoAsync(
-			 int page,
-			 int pageSize,
-			 object? filtros = null,
-			 string? orderBy = null,
-			 bool orderByDesc = false)
+			int page,
+			int pageSize,
+			object? filtros = null,
+			string? orderBy = null,
+			bool orderByDesc = false)
 		{
-			var resultado = await _consultaRepository.GetConsultasPaginadoAsync(
-				page, pageSize, filtros, orderBy, orderByDesc);
+			var filtrosComAlias = filtros != null
+				? MapearAliasCampos(filtros, _filtroAliasConsulta)
+				: null;
 
-			var pagedDto = new PagedResultResponse<ConsultaCompleta>
+			var resultado = await _consultaRepository.GetConsultasPaginadoAsync(
+				page, pageSize, filtrosComAlias, orderBy, orderByDesc);
+
+			return new PagedResultResponse<ConsultaCompleta>
 			{
 				Items = resultado.Items,
 				TotalCount = resultado.TotalCount,
 				Page = resultado.Page,
 				PageSize = resultado.PageSize
 			};
-
-			return pagedDto;
 		}
+
 
 
 
@@ -246,8 +249,13 @@ namespace CludeMedSync.Service.Services
 			string? orderBy = null,
 			bool orderByDesc = false)
 		{
+
+			var filtrosComAlias = filtros != null
+				? MapearAliasCampos(filtros, _filtroAliasConsulta)
+				: null;
+
 			var resultado = await _consultaLogRepository.GetConsultasLogPaginadoAsync(
-			page, pageSize, filtros, orderBy, orderByDesc);
+			page, pageSize, filtrosComAlias, orderBy, orderByDesc);
 
 			var pagedDto = new PagedResultResponse<ConsultaLogCompleta>
 			{
@@ -259,6 +267,38 @@ namespace CludeMedSync.Service.Services
 
 			return pagedDto;
 		}
+
+		private static readonly Dictionary<string, string> _filtroAliasConsulta = new()
+		{
+			{ "ConsultaId", "co.Id" },
+			{ "UsuarioId", "co.UsuarioId" },
+			{ "PacienteId", "co.PacienteId" },
+			{ "PacienteNome", "p.NomeCompleto" },
+			{ "ProfissionalId", "co.ProfissionalId" },
+			{ "ProfissionalNome", "pr.NomeCompleto" },
+			{ "DataHoraInicio", "co.DataHoraInicio" },
+			{ "DataHoraFim", "co.DataHoraFim" },
+			{ "Motivo", "co.Motivo" },
+			{ "Observacao", "co.Observacao" },
+			{ "Status", "co.Status" }
+		};
+
+		private object MapearAliasCampos(object filtros, Dictionary<string, string> alias)
+		{
+			if (filtros is not IDictionary<string, object> dict)
+				return filtros;
+
+			var novoDict = new Dictionary<string, object>();
+
+			foreach (var kv in dict)
+			{
+				var chave = alias.ContainsKey(kv.Key) ? alias[kv.Key] : kv.Key;
+				novoDict[chave] = kv.Value;
+			}
+
+			return novoDict;
+		}
+
 
 
 		#endregion

@@ -11,12 +11,24 @@ export class ToastService {
     toast.className = `toast ${type}`;
     let icon = '';
 
-    switch(type) {
-      case 'success': icon = '<i class="fas fa-check-circle"></i>'; break;
-      case 'error': icon = '<i class="fas fa-times-circle"></i>'; break;
-      case 'warning': icon = '<i class="fas fa-exclamation-triangle"></i>'; break;
-      case 'info': icon = '<i class="fas fa-info-circle"></i>'; break;
+    switch (type) {
+      case 'success':
+        icon = '<i class="fas fa-check-circle"></i>';
+        break;
+      case 'error':
+        icon = '<i class="fas fa-times-circle"></i>';
+        break;
+      case 'warning':
+        icon = '<i class="fas fa-exclamation-triangle"></i>';
+        break;
+      case 'info':
+        icon = '<i class="fas fa-info-circle"></i>';
+        break;
+      default:
+        icon = '<i class="fas fa-exclamation-triangle"></i>'; // fallback padrão
+        break;
     }
+
 
     toast.innerHTML = `${icon}<span>${message}</span>`;
 

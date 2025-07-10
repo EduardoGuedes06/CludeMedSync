@@ -1,15 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Necessário para o ngModel nos filtros
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-
-// Componentes e Modelos
+import { FormsModule } from '@angular/forms';
 import { GenericModalComponent } from '../modals/modal.component';
 import { PacienteModalComponent } from '../modals/paciente/paciente.modal.component';
 import { PacienteService } from '../../services/paciente/pacientes.service';
 import { Paciente } from '../../models/paciente/paciente.model';
 import { PagedResult } from '../../models/generic/paged-result.model';
+import { buildFilterString } from '../../shared/buildFilterString';
+
+interface ActiveFilter {
+  field: string;
+  display: string;
+  value: any;
+  displayValue: string;
+}
 
 @Component({
   selector: 'app-pacientes',
@@ -19,78 +23,97 @@ import { PagedResult } from '../../models/generic/paged-result.model';
   styleUrls: ['./pacientes.component.css']
 })
 export class Pacientes implements OnInit {
-
-  // --- Estado da Interface do Usuário (UI) ---
-  modalAberto = false;
   isLoading = true;
   errorMessage: string | null = null;
-  pacienteSelecionado: Paciente | null = null; // Para edição
-
-  // --- Estado dos Dados ---
+  pacienteSelecionado: Paciente | null = null;
+  modalAberto = false;
   pacientes: Paciente[] = [];
   pagedResult: PagedResult<Paciente> | null = null;
-
-  // --- Estado dos Filtros e Paginação ---
+  availableFilters = [
+    { value: 'NomeCompleto', display: 'Nome do Paciente', type: 'text' },
+    { value: 'CPF', display: 'CPF', type: 'text' },
+    { value: 'Email', display: 'E-mail', type: 'text' },
+    { value: 'Ativo', display: 'Status', type: 'select', options: [{value: 'true', display: 'Ativo'}, {value: 'false', display: 'Inativo'}] }
+  ];
+  activeFilters: ActiveFilter[] = [];
+  currentFilterField: string = 'NomeCompleto';
+  currentFilterValue: any = '';
   public currentPage = 1;
-  public pageSize = 9; // Ideal para um grid 3x3
-  public termoBusca = '';
-  public statusFiltro = ''; // Valor padrão para "Todos"
-  public ordemFiltro = 'Id_desc'; // Valor padrão para "Mais Recentes"
-
-  // Subject para aplicar debounce na busca e evitar chamadas excessivas à API
-  private buscaSubject = new Subject<string>();
+  public pageSize = 9;
+  public ordemFiltro = 'Id_desc';
 
   constructor(private pacienteService: PacienteService) { }
 
   ngOnInit(): void {
-    // Carrega os dados iniciais ao iniciar o componente
     this.carregarPacientes();
-
-    // Configura o "ouvinte" para a barra de busca
-    this.buscaSubject.pipe(
-      debounceTime(500),       // Espera 500ms após o usuário parar de digitar
-      distinctUntilChanged()   // Só executa se o texto for diferente do anterior
-    ).subscribe(() => {
-      this.currentPage = 1;    // Reseta para a primeira página ao fazer uma nova busca
-      this.carregarPacientes();
-    });
   }
 
-  /**
-   * Método central que busca os dados da API com base nos filtros e paginação atuais.
-   */
   carregarPacientes(): void {
     this.isLoading = true;
     this.errorMessage = null;
-
-    // Constrói o objeto de filtros a ser enviado para o serviço
-    const filtros = {
-      termoBusca: this.termoBusca,
-      ativo: this.statusFiltro,
-      orderBy: this.ordemFiltro.split('_')[0],      // Extrai o nome da coluna (ex: "NomeCompleto")
-      orderByDesc: this.ordemFiltro.split('_')[1] === 'desc' // Extrai a direção (true ou false)
-    };
-
-    this.pacienteService.listarPacientes(this.currentPage, this.pageSize, filtros).subscribe({
+    const dataFilters = this.activeFilters.reduce((acc, filter) => {
+      acc[filter.field] = filter.value;
+      return acc;
+    }, {} as { [key: string]: any });
+    const filtroFormatado = buildFilterString(dataFilters);
+    const [orderBy, orderDir] = this.ordemFiltro.split('_');
+    const orderByDesc = orderDir === 'desc';
+    this.pacienteService.listarPacientes(this.currentPage, this.pageSize, filtroFormatado, orderBy, orderByDesc).subscribe({
       next: (resultado) => {
-        this.pagedResult = resultado;
         this.pacientes = resultado.items;
+        this.pagedResult = resultado;
         this.isLoading = false;
       },
       error: (err) => {
-        this.errorMessage = err.message;
+        this.errorMessage = 'Falha ao carregar pacientes. Tente novamente mais tarde.';
         this.isLoading = false;
-        (window as any).showToast(err.message || 'Falha ao carregar pacientes.', 'danger');
       }
     });
   }
 
-  // --- Métodos de Ação dos Cards ---
+  addFilter(): void {
+    if (!this.currentFilterField || this.currentFilterValue === '' || this.currentFilterValue === null) {
+      return;
+    }
+    const selectedFilterConfig = this.getFilterConfig();
+    if (!selectedFilterConfig) return;
+    const isDuplicate = this.activeFilters.some(f => f.field === this.currentFilterField);
+    if (isDuplicate) {
+      return;
+    }
+    let displayValue = this.currentFilterValue;
+    if (selectedFilterConfig.type === 'select') {
+      displayValue = selectedFilterConfig.options?.find(opt => opt.value === this.currentFilterValue)?.display || this.currentFilterValue;
+    }
+    this.activeFilters.push({
+      field: this.currentFilterField,
+      display: selectedFilterConfig.display,
+      value: this.currentFilterValue,
+      displayValue: displayValue
+    });
+    this.currentFilterValue = '';
+    this.currentPage = 1;
+    this.carregarPacientes();
+  }
+
+  removeFilter(index: number): void {
+    this.activeFilters.splice(index, 1);
+    this.currentPage = 1;
+    this.carregarPacientes();
+  }
+  
+  onOrderChange(): void {
+    this.currentPage = 1;
+    this.carregarPacientes();
+  }
+
+  getFilterConfig() {
+    return this.availableFilters.find(f => f.value === this.currentFilterField);
+  }
 
   editarPaciente(paciente: Paciente): void {
-    this.pacienteSelecionado = paciente; // Guarda o paciente para preencher o formulário do modal
+    this.pacienteSelecionado = { ...paciente };
     this.abrirModalPaciente();
-    (window as any).showToast(`Editando paciente: ${paciente.nomeCompleto}`, 'info');
   }
 
   excluirPaciente(paciente: Paciente): void {
@@ -98,26 +121,14 @@ export class Pacientes implements OnInit {
       this.isLoading = true;
       this.pacienteService.excluir(paciente.id).subscribe({
         next: () => {
-          (window as any).showToast('Paciente excluído com sucesso!', 'success');
-          this.carregarPacientes(); // Recarrega a lista para refletir a mudança
+          this.carregarPacientes();
         },
         error: (err) => {
           this.isLoading = false;
-          (window as any).showToast(err.message || 'Falha ao excluir paciente.', 'danger');
+          this.errorMessage = 'Falha ao excluir o paciente.';
         }
       });
     }
-  }
-
-  // --- Métodos de Filtro e Paginação ---
-
-  onBuscaInput(): void {
-    this.buscaSubject.next(this.termoBusca);
-  }
-
-  onFiltroChange(): void {
-    this.currentPage = 1; // Volta para a primeira página ao mudar um filtro
-    this.carregarPacientes();
   }
 
   proximaPagina(): void {
@@ -152,7 +163,6 @@ export class Pacientes implements OnInit {
     this.fecharModalPaciente();
     this.carregarPacientes();
   }
-
 
   calcularIdade(dataNascimento: string | Date): number {
     if (!dataNascimento) return 0;

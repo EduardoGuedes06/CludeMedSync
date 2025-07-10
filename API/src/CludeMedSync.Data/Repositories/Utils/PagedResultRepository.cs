@@ -20,12 +20,12 @@ namespace CludeMedSync.Data.Repositories.Utils
 		}
 
 		public async Task<PagedResult<T>> ObterPaginadoGenericoAsync(
-			int page,
-			int pageSize,
-			object? filtros = null,
-			string? orderBy = null,
-			bool? ativo = null,
-			bool orderByDesc = false)
+		int page,
+		int pageSize,
+		object? filtros = null,
+		string? orderBy = null,
+		bool? ativo = null,
+		bool orderByDesc = false)
 		{
 			using var connection = _connectionFactory.CreateConnection();
 
@@ -34,26 +34,39 @@ namespace CludeMedSync.Data.Repositories.Utils
 			string order = orderByDesc ? "DESC" : "ASC";
 			string orderByColumn = !string.IsNullOrWhiteSpace(orderBy) ? orderBy : "Id";
 
-			string whereClause = "";
-
+			var whereParts = new List<string>();
 			var parameters = new DynamicParameters();
+
 			parameters.Add("Offset", offset);
 			parameters.Add("PageSize", pageSize);
 
 			if (filtros is IDictionary<string, object> filtroDict && filtroDict.Any())
 			{
-				var conditions = filtroDict.Keys.Select(k => $"{k} = @{k}");
-				whereClause = "WHERE " + string.Join(" AND ", conditions);
-
 				foreach (var kvp in filtroDict)
 				{
-					parameters.Add(kvp.Key, kvp.Value);
+					var campo = kvp.Key;
+					var valor = kvp.Value;
+
+					var lowerCampo = campo.ToLowerInvariant();
+					bool usarLike = lowerCampo.Contains("Nome") || lowerCampo.Contains("Email") || lowerCampo.Contains("Telefone");
+
+					if (usarLike)
+					{
+						whereParts.Add($"{campo} LIKE @{campo}");
+						parameters.Add(campo, $"%{valor}%");
+					}
+					else
+					{
+						whereParts.Add($"{campo} = @{campo}");
+						parameters.Add(campo, valor);
+					}
 				}
 			}
 
-			var countSql = $"SELECT COUNT(*) FROM {_tableName} {whereClause};";
+			string whereClause = whereParts.Any() ? "WHERE " + string.Join(" AND ", whereParts) : "";
 
-			var dataSql = $@"
+			string countSql = $"SELECT COUNT(*) FROM {_tableName} {whereClause};";
+			string dataSql = $@"
 				SELECT * FROM {_tableName}
 				{whereClause}
 				ORDER BY {orderByColumn} {order}
@@ -65,7 +78,6 @@ namespace CludeMedSync.Data.Repositories.Utils
 
 			return new PagedResult<T>(items, totalCount, currentPage, pageSize);
 		}
-
 
 
 	}

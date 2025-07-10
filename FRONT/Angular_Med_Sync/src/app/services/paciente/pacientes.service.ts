@@ -18,21 +18,23 @@ export class PacienteService {
 
   constructor(private http: HttpClient) {}
 
+
   listarPacientes(
-    page: number = 1,
-    pageSize: number = 10,
-    filtros: any = {}
+    page: number,
+    pageSize: number,
+    filtros: string,
+    orderBy: string,
+    orderByDesc: boolean
   ): Observable<PagedResult<Paciente>> {
     
     let params = new HttpParams()
       .set('page', page.toString())
-      .set('pageSize', pageSize.toString());
+      .set('pageSize', pageSize.toString())
+      .set('orderBy', orderBy)
+      .set('orderByDesc', orderByDesc.toString());
 
-
-    for (const key in filtros) {
-      if (filtros.hasOwnProperty(key) && filtros[key]) {
-        params = params.append(key, filtros[key]);
-      }
+    if (filtros) {
+      params = params.append('filtros', filtros);
     }
 
     return this.http.get<ApiResponse<PagedResult<Paciente>>>(`${this.baseUrl}/${this.endpoint}`, { params })
@@ -47,13 +49,12 @@ export class PacienteService {
       );
   }
 
+
   obterPorId(id: number): Observable<PacienteResponse> {
     return this.http.get<ApiResponse<PacienteResponse>>(`${this.baseUrl}/${this.endpoint}/${id}`)
       .pipe(
         map(response => {
-          if (!response.sucesso) {
-            throw new Error(response.mensagem || `Erro ao buscar paciente com ID ${id}.`);
-          }
+          if (!response.sucesso) { throw new Error(response.mensagem); }
           return response.dados;
         }),
         catchError(this.handleError)
@@ -64,9 +65,7 @@ export class PacienteService {
     return this.http.post<ApiResponse<PacienteResponse>>(`${this.baseUrl}/${this.endpoint}`, paciente)
       .pipe(
         map(response => {
-          if (!response.sucesso) {
-            throw new Error(response.mensagem || 'Erro ao criar paciente.');
-          }
+          if (!response.sucesso) { throw new Error(response.mensagem); }
           return response.dados;
         }),
         catchError(this.handleError)
@@ -77,9 +76,7 @@ export class PacienteService {
     return this.http.put<ApiResponse<PacienteResponse>>(`${this.baseUrl}/${this.endpoint}/${id}`, paciente)
       .pipe(
         map(response => {
-          if (!response.sucesso) {
-            throw new Error(response.mensagem || 'Erro ao atualizar paciente.');
-          }
+          if (!response.sucesso) { throw new Error(response.mensagem); }
           return response.dados;
         }),
         catchError(this.handleError)
@@ -90,9 +87,7 @@ export class PacienteService {
     return this.http.delete<ApiResponse<any>>(`${this.baseUrl}/${this.endpoint}/${id}`)
       .pipe(
         map(response => {
-          if (!response.sucesso) {
-            throw new Error(response.mensagem || 'Erro ao excluir paciente.');
-          }
+          if (!response.sucesso) { throw new Error(response.mensagem); }
           return response;
         }),
         catchError(this.handleError)

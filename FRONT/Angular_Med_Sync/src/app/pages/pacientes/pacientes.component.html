@@ -1,73 +1,90 @@
 <div class="section-header">
   <h2 class="section-title">Pacientes</h2>
   <div class="toolbar">
-    <div class="toolbar-actions">
-      <div class="button-group">
-        <button class="btn success-btn" (click)="abrirModalPaciente()">
-          <i class="fas fa-user-plus"></i> Novo Paciente
-        </button>
-        <button class="btn primary-btn"><i class="fas fa-file-excel"></i> Exportar EXCEL</button>
-      </div>
+    <div class="button-group">
+      <button class="btn success-btn" (click)="abrirModalPaciente()">
+        <i class="fas fa-user-plus"></i> Novo Paciente
+      </button>
+      <button class="btn primary-btn"><i class="fas fa-file-excel"></i> Exportar EXCEL</button>
     </div>
   </div>
 </div>
 
-<div class="filter-bar">
-  <input type="text" placeholder="Busca por nome, CPF ou e-mail..." class="search-input" 
-         [(ngModel)]="termoBusca" 
-         (input)="onBuscaInput()">
-
-  <select class="filter-select" [(ngModel)]="statusFiltro" (change)="onFiltroChange()">
-    <option value="">Todos</option>
-    <option value="true">Ativo</option>
-    <option value="false">Inativo</option>
+<div class="filter-builder">
+  <select class="filter-select" [(ngModel)]="currentFilterField">
+    <option *ngFor="let filter of availableFilters" [value]="filter.value">
+      {{ filter.display }}
+    </option>
   </select>
 
-<select class="filter-select" [(ngModel)]="ordemFiltro" (change)="onFiltroChange()">
+  <ng-container [ngSwitch]="getFilterConfig()?.type">
+    <select *ngSwitchCase="'select'" class="filter-input" [(ngModel)]="currentFilterValue">
+      <option value="" disabled>Selecione o status</option>
+      <option *ngFor="let option of getFilterConfig()?.options" [value]="option.value">
+        {{ option.display }}
+      </option>
+    </select>
+    <input *ngSwitchDefault type="text" placeholder="Digite o valor do filtro..." class="filter-input" 
+           [(ngModel)]="currentFilterValue" (keyup.enter)="addFilter()">
+  </ng-container>
+
+  <button class="btn primary-btn" (click)="addFilter()">
+    <i class="fas fa-plus"></i> Adicionar Filtro
+  </button>
+  
+  <select class="filter-select" [(ngModel)]="ordemFiltro" (change)="onOrderChange()">
     <option value="Id_desc">Mais Recentes</option>
     <option value="Id_asc">Mais Antigos</option>
     <option value="NomeCompleto_asc">Nome (A-Z)</option>
     <option value="NomeCompleto_desc">Nome (Z-A)</option>
-</select>
+  </select>
+</div>
+
+<div class="active-filters" *ngIf="activeFilters.length > 0">
+  <span *ngFor="let filter of activeFilters; let i = index" class="filter-pill">
+    <strong>{{ filter.display }}:</strong> {{ filter.displayValue }}
+    <button class="remove-pill" (click)="removeFilter(i)" title="Remover filtro">&times;</button>
+  </span>
 </div>
 
 <div class="entity-list-grid">
-  
-<ng-container *ngIf="!isLoading && !errorMessage">
+  <div *ngIf="isLoading" class="loading-spinner">
+    <p>Carregando pacientes...</p>
+  </div>
+  <div *ngIf="errorMessage" class="error-message">
+    <p>{{ errorMessage }}</p>
+  </div>
+  <ng-container *ngIf="!isLoading && !errorMessage">
     <div *ngFor="let paciente of pacientes" class="entity-card">
-      
       <h3>{{ paciente.nomeCompleto }}</h3>
       <p>Idade: {{ calcularIdade(paciente.dataNascimento) }} anos</p>
       <p>Email: {{ paciente.email }}</p>
-
       <div class="badges-container">
-        <span class="badge">
+        <span class="badge" [ngClass]="paciente.ativo ? 'success-badge' : 'warning-badge'">
           {{ paciente.ativo ? 'Ativo' : 'Inativo' }}
         </span>
       </div>
-
       <div class="actions">
-        <button class="btn primary-btn" (click)="editarPaciente(paciente)">
-          <i class="fas fa-edit"></i> Editar
-        </button>
-        <button class="btn danger-btn" (click)="excluirPaciente(paciente)">
-          <i class="fas fa-trash"></i> Excluir
-        </button>
+        <button class="btn primary-btn" (click)="editarPaciente(paciente)"><i class="fas fa-edit"></i> Editar</button>
+        <button class="btn danger-btn" (click)="excluirPaciente(paciente)"><i class="fas fa-trash"></i> Excluir</button>
       </div>
-
     </div>
   </ng-container>
-
+  <div *ngIf="!isLoading && pacientes.length === 0 && !errorMessage" class="empty-state">
+    <p>Nenhum paciente encontrado.</p>
+  </div>
 </div>
 
-<div class="pagination-controls">
-  <button class="btn" disabled>Anterior</button>
-  <button class="btn active">1</button>
-  <button class="btn">2</button>
-  <button class="btn">Próximo</button>
+<div *ngIf="pagedResult && pagedResult.totalCount > 0 && !isLoading" class="pagination-controls">
+  <button class="btn" [disabled]="currentPage === 1" (click)="paginaAnterior()">Anterior</button>
+  <button *ngFor="let pageNum of [].constructor(pagedResult.totalPages); let i = index" 
+          class="btn" [ngClass]="{'active': (i + 1) === currentPage}" (click)="irParaPagina(i + 1)">
+    {{ i + 1 }}
+  </button>
+  <button class="btn" [disabled]="currentPage === pagedResult.totalPages" (click)="proximaPagina()">Próximo</button>
 </div>
 
-
+<app-generic-modal [aberto]="modalAberto" (fechar)="fecharModalPaciente()" [titulo]="pacienteSelecionado ? 'Editar Paciente' : 'Novo Paciente'">
 <app-generic-modal
   [aberto]="modalAberto"
   (fechar)="fecharModalPaciente()"
@@ -78,4 +95,3 @@
     (salvar)="salvarPaciente($event)"
   ></app-modal-paciente>
 </app-generic-modal>
-

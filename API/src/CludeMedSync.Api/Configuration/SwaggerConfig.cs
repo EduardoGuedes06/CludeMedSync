@@ -13,10 +13,10 @@ public static class SwaggerConfig
 		{
 			c.SwaggerDoc("v1", new OpenApiInfo
 			{
-				Title = "CludeMedSync API",
+				Title = "Med Sync Api",
 				Version = "v1",
-				Description = "API para o sistema de agendamento de consultas CludeMedSync.",
-				Contact = new OpenApiContact { Name = "Seu Nome", Email = "seu-email@provedor.com" },
+				Description = "API para o sistema de agendamento de consultas MedSync.",
+				Contact = new OpenApiContact { Name = "Eduardo", Email = "seu-email@provedor.com" },
 				License = new OpenApiLicense { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
 			});
 
